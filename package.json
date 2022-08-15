@@ -1,42 +1,59 @@
 {
-  "name": "med-equipment",
-  "version": "1.0.0",
-  "description": "Medical Equipment Manager",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "server": "nodemon temporary.js",
-    "dist": "electron-builder --x64"
-  },
-  "build": {
-    "extraResources": [
-        "./equipments.db"
-    ],
-    "npmRebuild": "false"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "electron": "^20.0.2",
-    "electron-builder": "^23.3.3",
-    "nodemon": "^2.0.19"
-  },
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.1.2",
-    "@sweetalert2/themes": "^5.0.11",
-    "angular": "^1.8.3",
-    "angular-route": "^1.8.3",
-    "angular-utils-pagination": "^0.11.1",
-    "bootstrap": "^5.2.0",
-    "chart.js": "^3.9.1",
-    "express": "^4.18.1",
-    "jquery": "^3.6.0",
-    "jquery-ui": "^1.13.2",
-    "moment": "^2.29.4",
-    "mysql2": "^2.3.3",
-    "mysqldump": "^3.2.0",
-    "sqlite": "^4.1.2",
-    "sqlite3": "^5.0.11",
-    "sweetalert2": "^11.4.26"
-  }
+    "name": "medical-equipment",
+    "version": "1.0.1",
+    "description": "Medical Equipment Manager",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "server": "nodemon temporary.js",
+        "dist": "electron-builder --x64",
+        "publish": "electron-builder --x64 -p always"
+    },
+    "build": {
+        "appId": "com.binariez.Ja3farMortada.med-equipment",
+        "productName": "Medical Equipment Manager",
+        "target": "NSIS",
+        "publish": [
+            {
+                "provider": "github",
+                "owner": "Ja3farMortada",
+                "repo": "med-equipment"
+            }
+        ],
+        "extraResources": [
+            "./equipments.db"
+        ],
+        "npmRebuild": "false"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Ja3farMortada/med-equipment.git"
+    },
+    "author": "Binariez LLC",
+    "license": "ISC",
+    "devDependencies": {
+        "electron": "^20.0.2",
+        "electron-builder": "^23.3.3",
+        "nodemon": "^2.0.19"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.1.2",
+        "@sweetalert2/themes": "^5.0.11",
+        "angular": "^1.8.3",
+        "angular-route": "^1.8.3",
+        "angular-utils-pagination": "^0.11.1",
+        "bootstrap": "^5.2.0",
+        "chart.js": "^3.9.1",
+        "electron-log": "^4.4.8",
+        "electron-updater": "^5.2.1",
+        "express": "^4.18.1",
+        "jquery": "^3.6.0",
+        "jquery-ui": "^1.13.2",
+        "moment": "^2.29.4",
+        "mysql2": "^2.3.3",
+        "mysqldump": "^3.2.0",
+        "sqlite": "^4.1.2",
+        "sqlite3": "^5.0.11",
+        "sweetalert2": "^11.4.26"
+    }
 }

@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../node_modules/@sweetalert2/themes/dark/dark.min.css">
 
     <!-- JS Frameworks -->
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/angular/angular.min.js"></script>
     <script src="../node_modules/angular-route/angular-route.min.js"></script>
@@ -22,7 +23,7 @@
 
     <!-- Load Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
-    
+
     <!-- Load Main Controller -->
     <script src="mainController.js"></script>
 
@@ -51,12 +52,136 @@
                         <a class="nav-link" href="#!/facebook"><i class="fab fa-facebook">Main 3</i></a>
                     </li> -->
                 </ul>
+
+                <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="navbar-brand dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown"><i class="fas fa-cogs"></i>
+                            Settings
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <!-- <li><a class="dropdown-item" href="" ng-click="backupDB()"><i class="fas fa-database fa-lg fa-fw"></i></a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li> -->
+                            <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#aboutModal"><i class="fas fa-info-circle fa-lg fa-fw"></i> About</a></li>
+                            <li><a class="dropdown-item" href="" ng-click="openUpdateModal()"><i class="fas fa-sync-alt fa-lg fa-fw"></i> Check For Updates</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
     <div ng-view>
 
+    </div>
+
+    <!-- About modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-info-circle fa-lg"></i>About</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    
+                    <!-- <h5>Dependencies:</h5> -->
+                    <br>
+                    <table class="table table-bordered table-sm text-center">
+                        <thead>
+                            <tr>
+                                <th>Dependency name</th>
+                                <th>Version</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>System</td>
+                                <td>{{ package.version }}</td>
+                            </tr>
+                            <tr>
+                                <td>AngularJS</td>
+                                <td>{{ package.dependencies.angular.slice(1, 7) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Bootstrap</td>
+                                <td>{{ package.dependencies.bootstrap.slice(1, 7) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Express</td>
+                                <td>{{ package.dependencies.express.slice(1, 7) }}</td>
+                            </tr>
+                            <tr>
+                                <td>SQLite3</td>
+                                <td>{{ package.dependencies.sqlite3.slice(1, 7) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- <ul>
+                        <li><b>AngularJS:</b> {{package.dependencies.angular.slice(1, 7)}}</li>
+                        <li><b>Bootstrap:</b> {{package.dependencies.bootstrap.slice(1, 7)}}</li>
+                        <li><b>jQuery:</b> {{package.dependencies.jquery.slice(1, 7)}}</li>
+                        <li><b>ExpressJS:</b> {{package.dependencies.express.slice(1, 7)}}</li>
+                        <li><b>MySQL:</b> {{package.dependencies.mysql.slice(1, 7)}}</li>
+                    </ul> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- update modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-sync-alt fa-lg"></i> Updater(beta)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <h3 class="text-center">Medical Equipments</h3>
+                    <h6 class="text-center">current version: {{ package.version }}</h6>
+
+                    <!-- text -->
+                    <h6 class="text-center mt-3">{{text}}</h6>
+
+                    <!-- spinner -->
+                    <div class="d-flex justify-content-center mt-3" ng-if="showSpinner">
+                        <div class="spinner-grow text-primary" role="status">
+                        </div>
+                    </div>
+
+                    <!-- download update button -->
+                    <button ng-show="download == true" type="button" class="btn btn-outline-dark"
+                        ng-click="downloadUpdate()">download now</button>
+
+                    <!-- download progress -->
+                    <div class="text-center" ng-if="downloading">
+                        <div class="progress">
+                            <div id="progressBar" class="progress-bar bg-success" role="progressbar"></div>
+                        </div>
+                        <span>({{((data.transferred)/1000000).toFixed(2)}} MB / {{((data.total)/1000000).toFixed(2)}}
+                            MB)</span>
+                    </div>
+
+                    <!-- install update button -->
+                    <div class="text-center" ng-if="downloaded">
+                        <button class="btn btn-outline-success" ng-click="applyUpdate()">install now</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- check for update button -->
+                    <button ng-show="checked == false" type="button" class="btn btn-success"
+                        ng-click="checkForUpdates()">Check
+                        for Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 

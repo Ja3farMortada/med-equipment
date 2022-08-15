@@ -1,4 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const {
+    app,
+    BrowserWindow,
+    ipcMain
+} = require('electron')
 const path = require('path')
 
 // require keys
@@ -15,38 +19,42 @@ if (!isDev) {
     var node = server.listen(keys.port, () => console.log(`listening on port ${keys.port} ...`));
 }
 
-function createWindow () {
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    show: false,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
-  win.maximize()
-  win.show()
+function createWindow() {
+    const win = new BrowserWindow({
+        width: 800,
+        height: 600,
+        show: false,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
+    })
+    win.maximize()
+    win.show()
 
-  win.loadFile('app/index.html')
+    win.loadFile('app/index.html')
+
+    // require update module
+    const updater = require('./update')
+    updater(win, ipcMain);
 }
 
 app.whenReady().then(() => {
-  createWindow()
+    createWindow()
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-    }
-  })
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow()
+        }
+    })
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    if (!isDev) {
-        node.close();
+    if (process.platform !== 'darwin') {
+        if (!isDev) {
+            node.close();
+        }
+        app.quit()
     }
-    app.quit()
-  }
 })
 
 
@@ -72,3 +80,9 @@ ipcMain.on('backupDB', () => {
         }
     })
 });
+
+// read package info
+ipcMain.handle('read-package', function () {
+    let data = require('./package.json');
+    return data;
+})
