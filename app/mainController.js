@@ -20,7 +20,7 @@ app.factory('mainFactory', function () {
 
 
     model.getPackages = async () => {
-        let response = await window.electron.receive('read-package');
+        let response = await window.electron.ipcRenderer.invoke('read-package');
         if (response) {
             return response;
         }
@@ -32,9 +32,6 @@ app.factory('mainFactory', function () {
 // Main Controller
 app.controller('mainController', function ($scope, mainFactory) {
 
-    // window.electron.receive('test', (mes) => {
-    //     console.log(mes);
-    // })
     // Read Package.json
     (function() {
         mainFactory.getPackages().then(function(response) {
@@ -91,13 +88,13 @@ app.controller('mainController', function ($scope, mainFactory) {
         console.log(data);
     });
     window.electron.receive('downloading', function (data) {
+        console.log(data);
         $scope.$digest($scope.showSpinner = false);
         $scope.$digest($scope.download = false);
         $scope.$digest($scope.downloading = true);
         $scope.$digest($scope.data = data);
         $scope.$digest($scope.text = `Downloading: ${data.percent.toFixed(2)}%`)
         $('#progressBar').css("width", data.percent + "%");
-        console.log(data);
     });
     window.electron.receive('downloaded', function (data) {
         $scope.$digest($scope.downloading = false);
