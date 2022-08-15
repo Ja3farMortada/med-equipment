@@ -1,0 +1,12 @@
+.table-sm>:not(caption)>*>* {
+    padding: 0rem 0rem !important;
+}
+
+
+.table>:not(caption)>*>* {
+    font-size: small !important;
+}
+
+.padding {
+    padding: 0.25rem 0.25rem !important;
+}

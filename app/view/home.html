@@ -1,0 +1,140 @@
+<div class="container-fluid">
+    <div class="row mt-2 mb-3">
+        <div class="col-1">
+            <hr>
+        </div>
+        <div class="col-auto d-flex justify-content-center align-items-center">
+            <h5 class="mb-0 text-secondary select-off"><i class="fas fa-search fa-lg fa-fw"></i> Search</h5>
+        </div>
+        <div class="col">
+            <hr>
+        </div>
+    </div>
+
+    <!-- search form -->
+    <form ng-submit="search()">
+        <!-- search fields -->
+        <div class="row row-cols-4">
+            <div class="col mb-2" ng-repeat="field in searchArray">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text">{{ field.label }}</span>
+                    <input class="form-control" type="search" spellcheck="false" ng-model="field.value">
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text">{{ ppmValue.label }}</span>
+                    <select class="form-control form-control-sm" ng-model="ppmValue.value">
+                        <option value="all">All</option>
+                        <option value="due">Due</option>
+                        <option value="over_due">Over Due</option>
+                    </select>
+                </div>
+            </div>
+            <!-- buttons -->
+            <div class="d-grids gap-2 col mx-auto">
+                <button ng-class="{disabled: loading == true}" type="submit" class="btn btn-dark btn"><i
+                        class="fas fa-search"></i> Search</button>
+                <button type="button" class="btn btn-outline-danger btn" ng-click="empty()"><i
+                        class="fas fa-backspace"></i>
+                    Reset</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- ******************************************* RESULTS TABLE ************************************ -->
+    <!-- ********************************************************************************************** -->
+    <div class="row mt-1">
+        <div class="col-1">
+            <hr>
+        </div>
+        <div class="col-auto d-flex justify-content-center align-items-center">
+            <h5 class="mb-0 text-secondary select-off"><i class="fas fa-file-alt fa-lg fa-fw"></i> Results</h5>
+        </div>
+        <div class="col">
+            <hr>
+        </div>
+    </div>
+
+    <div>
+        <div class="row justify-content-between mb-2 mt-3">
+            <div ng-if="loading" class="d-flex justify-content-center col">
+                <div class="spinner-border text-dark"></div>
+            </div>
+            <div class="col-auto mx-auto">
+                <!-- <button ng-if="equipments.length > 0" ng-click="exportExcel()" class="btn btn-outline-success">Export Excel
+                    <i class="fas fa-table"></i></button>
+                     -->
+
+                <dir-pagination-controls max-size="5" direction-links="true" boundary-links="false"
+                    template-url="templates/dirPagination.tpl.html">
+                </dir-pagination-controls>
+            </div>
+            <!-- <div class="col-3">
+                <div class="input-group" ng-show="equipments.length > 0">
+                    <div class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <input ng-change="test()" id="search" type="search" class="form-control form-control-sm" ng-model="searchVal"
+                        placeholder="Search..." spellcheck="false">
+                </div>
+            </div> -->
+        </div>
+        <table class="table table-striped table-sm table-bordered text-center">
+            <caption><b>Total Results:</b>
+                {{ equipments.length.toLocaleString() }}</caption>
+            <thead>
+                <tr class="bg-dark text-light small">
+                    <th colspan="3">ASSET</th>
+                    <th colspan="2">LOCATION</th>
+                    <th colspan="4">SUPPLIER</th>
+                    <th colspan="4">ASSET INFORMATION</th>
+                </tr>
+                <tr class="bg-secondary">
+                    <th width="3%" style="padding: 0.5rem 0.5rem !important;">#</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Description</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Asset No.</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Department</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">EST Report</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Installation Date</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">PPM Schedule</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">PPM Done Date</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Supplier</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Model</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Serial No.</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Maker/Origin</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="small" dir-paginate="data in equipments | itemsPerPage:20 | filter:searchVal">
+                    <td>{{ data.record_ID }}</td>
+                    <td>{{ data.description }}</td>
+                    <td>{{ data.asset_no }}</td>
+                    <td>{{ data.department }}</td>
+                    <td>{{ data.est_report }}</td>
+                    <td>{{ data.installation_date }}</td>
+                    <td
+                        ng-class="{'bg-warning': moment(data.ppm_schedule) < 30 && moment(data.ppm_schedule) > 0, 'bg-danger': moment(data.ppm_schedule) < 0}">
+                        {{ data.ppm_schedule || ' --- '}}</td>
+                    <td>{{ data.ppm_done || ' --- ' }}</td>
+                    <td>{{ data.supplier }}</td>
+                    <td>{{ data.model }}</td>
+                    <td>{{ data.serial_no }}</td>
+                    <td>{{ data.maker }}</td>
+                    <td>{{ data.notes || ' --- ' }}</td>
+                </tr>
+
+                <tr ng-if="equipments.length === 0">
+                    <td colspan="13" class="table-secondary">No Records Yet!</td>
+                </tr>
+
+
+                <!-- <tr ng-if="equipments.length === 0 && loading == false" class="table-warning select-off">
+                    <td colspan="13">No Matching Results Found!</td>
+                </tr> -->
+            </tbody>
+        </table>
+
+    </div>
+</div>

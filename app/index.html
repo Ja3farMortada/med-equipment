@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Equipments</title>
+
+    <!-- Load Stylesheets CSS -->
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="../node_modules/@sweetalert2/themes/dark/dark.min.css">
+
+    <!-- JS Frameworks -->
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../node_modules/angular/angular.min.js"></script>
+    <script src="../node_modules/angular-route/angular-route.min.js"></script>
+    <script src="../node_modules/angular-utils-pagination/dirPagination.js"></script>
+    <script src="../node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="../node_modules/moment/moment.js"></script>
+
+    <!-- Load Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Load Main Controller -->
+    <script src="mainController.js"></script>
+
+    <!-- Load Services -->
+    <script src="_services/notificationService.js"></script>
+    <script src="_services/dateService.js"></script>
+</head>
+
+<body ng-app="mainApp" ng-controller="mainController" style="background-color: whitesmoke;">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand"><i class="fas fa-circle-radiation fa-lg"></i></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#!/home"><i class="fas fa-house-medical"></i> Home</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#!/hotels"><i class="fas fa-hotel">Main 2</i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#!/facebook"><i class="fab fa-facebook">Main 3</i></a>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div ng-view>
+
+    </div>
+</body>
+
+<!-- Load Controllers -->
+<script src="controller/homeController.js"></script>
+
+<!-- Load Models -->
+<script src="model/homeFactory.js"></script>
+
+</html>
