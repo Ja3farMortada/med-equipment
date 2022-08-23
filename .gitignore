@@ -3,4 +3,3 @@ node_modules
 *.swp
 json
 dist
-package-lock.json
