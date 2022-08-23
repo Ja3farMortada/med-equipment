@@ -3,16 +3,33 @@ app.factory('homeFactory', function ($http, NotificationService) {
     let url = NotificationService.getUrl();
 
     const model = {};
+    model.tabSelected = 0;
     model.equipments = [];
+    model.recentEquipments = [];
 
-    const getEquipments = () => {
-        $http.get(`${url}/getEquipments`).then(results => {
-            angular.copy(results.data, model.equipments);
+    //tab selection
+    model.selectTab = function (tab) {
+        if (this.tabSelected != tab) {
+            switch (tab) {
+                case 0:
+                    this.tabSelected = 0;
+                    break;
+
+                case 1:
+                    this.tabSelected = 1;
+                    break;
+            };
+        }
+    };
+
+    const getRecentEquipments = () => {
+        $http.get(`${url}/getRecentEquipments`).then(results => {
+            angular.copy(results.data, model.recentEquipments);
         }, error => {
             NotificationService.showError(error);
         });
     }
-    // getEquipments();
+    getRecentEquipments();
 
     model.search = data => {
         return $http.post(`${url}/search`, data).then(response => {
@@ -20,6 +37,15 @@ app.factory('homeFactory', function ($http, NotificationService) {
         }, error => {
             NotificationService.showError(error);
         });
+    }
+
+    model.submitAddEquipment = data => {
+        return $http.post(`${url}/addEquipment`, data).then(response => {
+            NotificationService.showSuccess();
+            return response.data;
+        }, error => {
+            NotificationService.showError(error);
+        })
     }
 
     return model;

@@ -1,6 +1,10 @@
 app.service('NotificationService', ['$timeout', function ($timeout) {
 
+    let successAudio = new Audio('assets/ding-sound.mp3');
+    let errorAudio = new Audio('assets/error-2.wav');
+
     this.showSuccess = () => {
+        successAudio.play();
         Swal.fire({
             title: ' ',
             text: 'Process Completed Successfully!',
@@ -14,9 +18,10 @@ app.service('NotificationService', ['$timeout', function ($timeout) {
     };
 
     this.showError = error => {
+        errorAudio.play();
         Swal.fire({
             title: 'ERROR!',
-            text: `${error.data.sqlMessage}`,
+            text: `${error.data}`,
             icon: 'error'
         });
     };

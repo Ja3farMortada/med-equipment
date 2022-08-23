@@ -1,10 +1,30 @@
-<div class="container-fluid">
-    <div class="row mt-2 mb-3">
+<!-- Navigation tabs -->
+<div class="container justify-content-center d-flex">
+    <ul class="nav nav-tabs nav-fills">
+        <li class="nav-item text-center">
+            <a class="nav-link text-secondary text-uppercase"
+                ng-class="{'active': tabSelected === 0, 'active-tab-dir': tabSelected === 0}" ng-click="selectTab(0)"><i
+                    class="fas fa-search fa-2x fa-fw"></i> Search</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-secondary text-uppercase"
+                ng-class="{'active': tabSelected === 1, 'active-tab-dir': tabSelected === 1}" ng-click="selectTab(1)"><i
+                    class="fas fa-cog fa-2x fa-fw"></i> Settings</a>
+        </li>
+    </ul>
+</div>
+
+<br>
+
+
+<!-- FIRST TAB -->
+<section ng-show="tabSelected == 0">
+    <div class="row mb-3">
         <div class="col-1">
             <hr>
         </div>
         <div class="col-auto d-flex justify-content-center align-items-center">
-            <h5 class="mb-0 text-secondary select-off"><i class="fas fa-search fa-lg fa-fw"></i> Search</h5>
+            <h5 class="mb-0 text-secondary select-off"><i class="fas fa-search fa-lg fa-fw"></i> Search Fields</h5>
         </div>
         <div class="col">
             <hr>
@@ -12,35 +32,38 @@
     </div>
 
     <!-- search form -->
-    <form ng-submit="search()">
-        <!-- search fields -->
-        <div class="row row-cols-4">
-            <div class="col mb-2" ng-repeat="field in searchArray">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">{{ field.label }}</span>
-                    <input class="form-control" type="search" spellcheck="false" ng-model="field.value">
+    <div class="container">
+        <form ng-submit="search()">
+            <!-- search fields -->
+            <div class="row row-cols-5">
+                <div class="col mb-2" ng-repeat="field in searchArray">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">{{ field.label }}</span>
+                        <input class="form-control" type="search" spellcheck="false" ng-model="field.value">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">{{ ppmValue.label }}</span>
+                        <select class="form-control form-control-sm" ng-model="ppmValue.value">
+                            <option value="all">All</option>
+                            <option value="due">Due</option>
+                            <option value="over_due">Over Due</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="input-group input-group-sm">
-                    <span class="input-group-text">{{ ppmValue.label }}</span>
-                    <select class="form-control form-control-sm" ng-model="ppmValue.value">
-                        <option value="all">All</option>
-                        <option value="due">Due</option>
-                        <option value="over_due">Over Due</option>
-                    </select>
-                </div>
-            </div>
+            <br>
             <!-- buttons -->
-            <div class="d-grids gap-2 col mx-auto">
+            <div class="d-grids gap-2 d-flex justify-content-center">
                 <button ng-class="{disabled: loading == true}" type="submit" class="btn btn-dark btn"><i
                         class="fas fa-search"></i> Search</button>
                 <button type="button" class="btn btn-outline-danger btn" ng-click="empty()"><i
                         class="fas fa-backspace"></i>
                     Reset</button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 
     <!-- ******************************************* RESULTS TABLE ************************************ -->
     <!-- ********************************************************************************************** -->
@@ -63,22 +86,22 @@
             </div>
             <div class="col-auto mx-auto">
                 <!-- <button ng-if="equipments.length > 0" ng-click="exportExcel()" class="btn btn-outline-success">Export Excel
-                    <i class="fas fa-table"></i></button>
-                     -->
+                <i class="fas fa-table"></i></button>
+                    -->
 
                 <dir-pagination-controls max-size="5" direction-links="true" boundary-links="false"
                     template-url="templates/dirPagination.tpl.html">
                 </dir-pagination-controls>
             </div>
             <!-- <div class="col-3">
-                <div class="input-group" ng-show="equipments.length > 0">
-                    <div class="input-group-text">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <input ng-change="test()" id="search" type="search" class="form-control form-control-sm" ng-model="searchVal"
-                        placeholder="Search..." spellcheck="false">
+            <div class="input-group" ng-show="equipments.length > 0">
+                <div class="input-group-text">
+                    <i class="fas fa-search"></i>
                 </div>
-            </div> -->
+                <input ng-change="test()" id="search" type="search" class="form-control form-control-sm" ng-model="searchVal"
+                    placeholder="Search..." spellcheck="false">
+            </div>
+        </div> -->
         </div>
         <table class="table table-striped table-sm table-bordered text-center">
             <caption><b>Total Results:</b>
@@ -98,7 +121,7 @@
                     <th style="padding: 0.5rem 0.5rem !important;">EST Report</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Installation Date</th>
                     <th style="padding: 0.5rem 0.5rem !important;">PPM Schedule</th>
-                    <th style="padding: 0.5rem 0.5rem !important;">PPM Done Date</th>
+                    <th style="padding: 0.5rem 0.5rem !important;">Last PPM</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Supplier</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Model</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Serial No.</th>
@@ -107,12 +130,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="small" dir-paginate="data in equipments | itemsPerPage:20 | filter:searchVal">
+                <tr dir-paginate="data in equipments | itemsPerPage:20 | filter:searchVal" class="small" ng-dblclick="openEditEquipmentModal(data)">
                     <td>{{ data.record_ID }}</td>
                     <td>{{ data.description }}</td>
                     <td>{{ data.asset_no }}</td>
                     <td>{{ data.department }}</td>
-                    <td>{{ data.est_report }}</td>
+                    <td>{{ data.est_report == 1 ? 'Yes':'No' }}</td>
                     <td>{{ data.installation_date }}</td>
                     <td
                         ng-class="{'bg-warning': moment(data.ppm_schedule) < 30 && moment(data.ppm_schedule) > 0, 'bg-danger': moment(data.ppm_schedule) < 0}">
@@ -131,10 +154,130 @@
 
 
                 <!-- <tr ng-if="equipments.length === 0 && loading == false" class="table-warning select-off">
-                    <td colspan="13">No Matching Results Found!</td>
-                </tr> -->
+                <td colspan="13">No Matching Results Found!</td>
+            </tr> -->
             </tbody>
         </table>
 
+    </div>
+</section>
+<!-- end firtst tab -->
+
+<!-- SECOND TAB -->
+<section ng-show="tabSelected == 1">
+    <div class="row mb-3">
+        <div class="col-1">
+            <hr>
+        </div>
+        <div class="col-auto d-flex justify-content-center align-items-center">
+            <h5 class="mb-0 text-secondary select-off"><i class="fas fa-laptop-medical fa-lg fa-fw"></i> Equipments</h5>
+        </div>
+        <div class="col">
+            <hr>
+        </div>
+    </div>
+
+    <div class="container">
+        <button ng-click="openAddEquipmentModal()" class="btn btn-outline-success"><i class="fas fa-add fa-fw"></i> Add
+            New Equipment</button>
+    </div>
+
+</section>
+
+<!-- equipments modal -->
+<div class="modal fade" tabindex="-1" id="equipmentsModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ modalTitle }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form ng-submit="submit()">
+                <div class="modal-body">
+                    <div class="row row-cols-5">
+                        <!-- Description -->
+                        <div class="col mb-2">
+                            <label class="form-label">Description</label>
+                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.description">
+                        </div>
+
+                        <!-- asset_no -->
+                        <div class="col mb-2">
+                            <label class="form-label">Asset No.</label>
+                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.asset_no">
+                        </div>
+
+                        <!-- department -->
+                        <div class="col mb-2">
+                            <label class="form-label">Department</label>
+                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.department">
+                        </div>
+
+                        <!-- est_report -->
+                        <div class="col mb-2">
+                            <label class="form-label">EST Report</label>
+                             <select class="form-control" ng-model="modalData.est_report">
+                                <option ng-value="0">No</option>
+                                <option ng-value="1">Yes</option>
+                             </select>
+                        </div>
+
+                        <!-- installation_date -->
+                        <div class="col mb-2">
+                            <label class="form-label">Installation Date</label>
+                            <input required id="installationDate" type="text" class="form-control" spellcheck="false" ng-model="modalData.installation_date">
+                        </div>
+
+                        <!-- ppm_schedule -->
+                        <div class="col mb-2">
+                            <label class="form-label">PPM Schedule</label>
+                            <input id="schedule" type="text" class="form-control" spellcheck="false" ng-model="modalData.ppm_schedule">
+                        </div>
+
+                        <!-- ppm_done -->
+                        <div class="col mb-2">
+                            <label class="form-label">Last PPM</label>
+                            <input id="lastPPM" type="text" class="form-control" spellcheck="false" ng-model="modalData.ppm_done">
+                        </div>
+
+                        <!-- supplier -->
+                        <div class="col mb-2">
+                            <label class="form-label">Supplier</label>
+                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.supplier">
+                        </div>
+
+                        <!-- model -->
+                        <div class="col mb-2">
+                            <label class="form-label">Model</label>
+                            <input type="text" class="form-control" spellcheck="false" ng-model="modalData.model">
+                        </div>
+
+                        <!-- serial_no -->
+                        <div class="col mb-2">
+                            <label class="form-label">Serial No.</label>
+                            <input type="text" class="form-control" spellcheck="false" ng-model="modalData.serial_no">
+                        </div>
+
+                        <!-- maker -->
+                        <div class="col mb-2">
+                            <label class="form-label">Maker</label>
+                            <input type="text" class="form-control" spellcheck="false" ng-model="modalData.maker">
+                        </div>
+
+                        <!-- notes -->
+                        <div class="col mb-2">
+                            <label class="form-label">Notes</label>
+                            <input type="text" class="form-control" spellcheck="false" ng-model="modalData.notes">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
+                        Cancel</button>
+                    <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
+                        Confirm</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>

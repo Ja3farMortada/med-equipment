@@ -12,8 +12,8 @@ module.exports = (server, db) => {
                     query += ` AND `;
                 }
                 count++;
-                query += `${data[i].column} = ?`;
-                values.push(`${data[i].value}`);
+                query += `${data[i].column} LIKE ?`;
+                values.push(`%${data[i].value}%`);
             }
         }
         if (count > 0) {
@@ -38,6 +38,34 @@ module.exports = (server, db) => {
             res.send(results);
         } catch (error) {
             res.status(400).send(error);
+        }
+    })
+
+
+    server.get('/getRecentEquipments', async (req, res) => {
+        let query = `SELECT * FROM equipments WHERE JULIANDAY('now') - JULIANDAY(date_added) < 10 AND record_status = 1`;
+        try {
+            const results = await db.all(query);
+            res.send(results);
+        } catch (e) {
+            res.status(400).send(e);
+        }
+    })
+
+    server.post('/addEquipment', async (req, res) => {
+        let data = req.body;
+        let keys = Object.keys(data);
+        let values = Object.values(data);
+
+        // console.log(data);
+
+        try {
+            let record = await db.run(`INSERT INTO equipments(${keys}) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, values);
+            // console.log(results);
+            let result = await db.get(`SELECT * FROM equipments WHERE record_ID = ${record.lastID}`);
+            res.send(result);
+        } catch (e) {
+            res.status(400).send(e);
         }
     })
 }

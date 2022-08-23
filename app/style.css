@@ -10,3 +10,18 @@
 .padding {
     padding: 0.25rem 0.25rem !important;
 }
+
+.active-tab-dir {
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-bottom: .15rem solid #041666 !important;
+    color: black !important;
+    background-color: whitesmoke !important;
+    background-color: #0c1e6e10 !important;
+}
+
+a[ng-click] {
+    cursor: pointer;
+    user-select: none;
+}

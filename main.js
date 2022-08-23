@@ -6,7 +6,7 @@ const {
 const path = require('path')
 
 // require keys
-const keys = require('./keys.json');
+// const keys = require('./keys.json');
 
 // require server
 const server = require('./server');
@@ -16,7 +16,7 @@ const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
 const getFromEnv = Number.parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
 const isDev = isEnvSet ? getFromEnv : !app.isPackaged;
 if (!isDev) {
-    var node = server.listen(keys.port, () => console.log(`listening on port ${keys.port} ...`));
+    var node = server.listen(3000, () => console.log(`listening on port ${3000} ...`));
 }
 
 function createWindow() {
