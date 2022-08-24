@@ -1,5 +1,9 @@
 app.service('NotificationService', ['$timeout', function ($timeout) {
 
+    this.getUrl = () => {
+        return `http://localhost:3000`;
+    }
+
     let successAudio = new Audio('assets/ding-sound.mp3');
     let errorAudio = new Audio('assets/error-2.wav');
 
@@ -21,7 +25,7 @@ app.service('NotificationService', ['$timeout', function ($timeout) {
         errorAudio.play();
         Swal.fire({
             title: 'ERROR!',
-            text: `${error.data}`,
+            text: `${error.data.sqlMessage}`,
             icon: 'error'
         });
     };
@@ -34,8 +38,15 @@ app.service('NotificationService', ['$timeout', function ($timeout) {
         });
     };
 
-    this.getUrl = () => {
-        return `http://localhost:3000`;
-    }
+    this.showWarning = () => {
+        return Swal.fire({
+            title: "WARNING",
+            text: "Are you sure you want to proceed?",
+            icon: "warning",
+            showCancelButton: true,
+            focusConfirm: false,
+            reverseButtons: true
+        });
+    };
 
 }]);

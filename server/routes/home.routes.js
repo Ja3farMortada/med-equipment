@@ -1,6 +1,6 @@
 module.exports = (server, db) => {
 
-    server.post('/search', async (req, res) => {
+    server.post('/search', (req, res) => {
         let data = req.body[0];
         let ppmData = req.body[1];
         let query = `SELECT * FROM equipments WHERE `;
@@ -24,48 +24,76 @@ module.exports = (server, db) => {
                 query += `record_status = 1`;
                 break;
             case 'due':
-                query += `JULIANDAY(ppm_schedule) - JULIANDAY('now') < 30  AND JULIANDAY(ppm_schedule) - JULIANDAY('now') > 0 AND record_status = 1`;
+                query += `DATEDIFF(ppm_schedule, DATE(now())) < 30  AND DATEDIFF(ppm_schedule, DATE(now())) > 0 AND record_status = 1`;
                 break;
             case 'over_due':
-                query += `JULIANDAY(ppm_schedule) - JULIANDAY('now') < 0 AND record_status = 1`;
+                query += `DATEDIFF(ppm_schedule, DATE(now())) < 0 AND record_status = 1`;
                 break;
         }
+        db.query(query, values, function(error, results) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                res.send(results);
+            }
+        });
 
-        try {
-            let statement = await db.prepare(query);
-            await statement.bind(values);
-            let results = await statement.all()
-            res.send(results);
-        } catch (error) {
-            res.status(400).send(error);
-        }
-    })
+    });
 
 
-    server.get('/getRecentEquipments', async (req, res) => {
-        let query = `SELECT * FROM equipments WHERE JULIANDAY('now') - JULIANDAY(date_added) < 10 AND record_status = 1`;
-        try {
-            const results = await db.all(query);
-            res.send(results);
-        } catch (e) {
-            res.status(400).send(e);
-        }
-    })
+    server.get('/getRecentEquipments', (req, res) => {
+        let query = `SELECT * FROM equipments WHERE DATEDIFF(DATE(now()), date_added) < 10 AND record_status = 1`;
+        db.query(query, function(error, results) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                res.send(results);
+            }
+        });
+    });
 
-    server.post('/addEquipment', async (req, res) => {
+    // Add Equipment
+    server.post('/addEquipment', (req, res) => {
         let data = req.body;
-        let keys = Object.keys(data);
-        let values = Object.values(data);
+        let query = `INSERT INTO equipments SET ?`;
+        db.query(query, data, function(error, result) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                db.query(`SELECT * FROM equipments WHERE record_ID = ${result.insertId}`, function(error, result) {
+                    if (error) {
+                        res.status(400).send(error);
+                    } else {
+                        res.send(result[0]);
+                    }
+                });
+            }
+        });
+    });
 
-        // console.log(data);
+    // Edit Equipment
+    server.post('/editEquipment', (req, res) => {
+        let data = req.body;
+        let query = `UPDATE equipments SET ? WHERE record_ID = ${data.record_ID}`;
+        db.query(query, data, function(error, result) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                res.send('');
+            }
+        });
+    });
 
-        try {
-            let record = await db.run(`INSERT INTO equipments(${keys}) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`, values);
-            // console.log(results);
-            let result = await db.get(`SELECT * FROM equipments WHERE record_ID = ${record.lastID}`);
-            res.send(result);
-        } catch (e) {
-            res.status(400).send(e);
-        }
+    // Delete Equipment
+    server.post('/deleteEquipment', (req, res) => {
+        let ID = req.body.ID;
+        let query = `DELETE FROM equipments WHERE record_ID = ?`;
+        db.query(query, ID, function(error, result) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                res.send('');
+            }
+        });
     })
 }

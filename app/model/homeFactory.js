@@ -48,5 +48,28 @@ app.factory('homeFactory', function ($http, NotificationService) {
         })
     }
 
+    model.submitEditEquipment = data => {
+        $http.post(`${url}/editEquipment`, data).then(() => {
+            NotificationService.showSuccess();
+        }, error => {
+            NotificationService.showError(error);
+        })
+    }
+
+    // delete
+    model.deleteEquipment = ID => {
+        NotificationService.showWarning().then(ok => {
+            if (ok.isConfirmed) {
+                return $http.post(`${url}/deleteEquipment`, {ID:ID}).then(() => {
+                    NotificationService.showSuccess();
+                    return 1;
+                }, error => {
+                    NotificationService.showError(error);
+                    return 0;
+                })
+            }
+        })
+    }
+
     return model;
 });

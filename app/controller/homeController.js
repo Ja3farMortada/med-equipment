@@ -143,14 +143,26 @@ app.controller('homeController', function ($scope, homeFactory, DateService) {
                 homeFactory.submitAddEquipment($scope.modalData).then(response => {
                     if (response) {
                         $scope.recentEquipments.push(response);
-                        equipmentsModal.hide()
+                        equipmentsModal.hide();
                     }
                 })
                 break;
 
             case 'Edit Equipment':
-                // 
+                homeFactory.submitEditEquipment($scope.modalData);
+                equipmentsModal.hide();
+                homeFactory.search([$scope.searchArray, $scope.ppmValue]);
                 break;
         }
     }
-})
+
+    $scope.deleteEquipment = () => {
+        homeFactory.deleteEquipment($scope.modalData.record_ID).then((response) => {
+            if (response == 1) {
+                equipmentsModal.hide();
+                homeFactory.search([$scope.searchArray, $scope.ppmValue]);
+            }
+        })
+    }
+
+});

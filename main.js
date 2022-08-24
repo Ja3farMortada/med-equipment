@@ -5,9 +5,6 @@ const {
 } = require('electron')
 const path = require('path')
 
-// require keys
-// const keys = require('./keys.json');
-
 // require server
 const server = require('./server');
 

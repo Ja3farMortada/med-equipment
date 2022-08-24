@@ -103,7 +103,7 @@
             </div>
         </div> -->
         </div>
-        <table class="table table-striped table-sm table-bordered text-center">
+        <table class="table table-hover table-striped table-sm table-bordered text-center">
             <caption><b>Total Results:</b>
                 {{ equipments.length.toLocaleString() }}</caption>
             <thead>
@@ -130,7 +130,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr dir-paginate="data in equipments | itemsPerPage:20 | filter:searchVal" class="small" ng-dblclick="openEditEquipmentModal(data)">
+                <tr dir-paginate="data in equipments | itemsPerPage:20 | filter:searchVal" class="small pointer"
+                    ng-dblclick="openEditEquipmentModal(data)">
                     <td>{{ data.record_ID }}</td>
                     <td>{{ data.description }}</td>
                     <td>{{ data.asset_no }}</td>
@@ -182,6 +183,38 @@
             New Equipment</button>
     </div>
 
+    <h4 class="text-center"><i class="fas fa-history fa-fw"></i> Recently Added</h4>
+    <table class="table table-bordered table-striped table-sm text-center">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Description</th>
+                <th>Asset No.</th>
+                <th>Department</th>
+                <th>Installation Date</th>
+                <th>Supplier</th>
+                <th>Model</th>
+                <th>Serial No.</th>
+                <th>Maker/Origin</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="record in recentEquipments">
+                <td>{{ record.record_ID }}</td>
+                <td>{{ record.description }}</td>
+                <td>{{ record.asset_no }}</td>
+                <td>{{ record.department }}</td>
+                <td>{{ record.installation_date }}</td>
+                <td>{{ record.supplier }}</td>
+                <td>{{ record.model }}</td>
+                <td>{{ record.serial_no }}</td>
+                <td>{{ record.maker }}</td>
+                <td>{{ record.date_added }}</td>
+            </tr>
+        </tbody>
+    </table>
+
 </section>
 
 <!-- equipments modal -->
@@ -198,52 +231,59 @@
                         <!-- Description -->
                         <div class="col mb-2">
                             <label class="form-label">Description</label>
-                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.description">
+                            <input required type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.description">
                         </div>
 
                         <!-- asset_no -->
                         <div class="col mb-2">
                             <label class="form-label">Asset No.</label>
-                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.asset_no">
+                            <input required type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.asset_no">
                         </div>
 
                         <!-- department -->
                         <div class="col mb-2">
                             <label class="form-label">Department</label>
-                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.department">
+                            <input required type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.department">
                         </div>
 
                         <!-- est_report -->
                         <div class="col mb-2">
                             <label class="form-label">EST Report</label>
-                             <select class="form-control" ng-model="modalData.est_report">
-                                <option ng-value="0">No</option>
-                                <option ng-value="1">Yes</option>
-                             </select>
+                            <select class="form-control" ng-model="modalData.est_report">
+                                <option ng-value="false">No</option>
+                                <option ng-value="true">Yes</option>
+                            </select>
                         </div>
 
                         <!-- installation_date -->
                         <div class="col mb-2">
                             <label class="form-label">Installation Date</label>
-                            <input required id="installationDate" type="text" class="form-control" spellcheck="false" ng-model="modalData.installation_date">
+                            <input required id="installationDate" type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.installation_date">
                         </div>
 
                         <!-- ppm_schedule -->
                         <div class="col mb-2">
                             <label class="form-label">PPM Schedule</label>
-                            <input id="schedule" type="text" class="form-control" spellcheck="false" ng-model="modalData.ppm_schedule">
+                            <input id="schedule" type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.ppm_schedule">
                         </div>
 
                         <!-- ppm_done -->
                         <div class="col mb-2">
                             <label class="form-label">Last PPM</label>
-                            <input id="lastPPM" type="text" class="form-control" spellcheck="false" ng-model="modalData.ppm_done">
+                            <input id="lastPPM" type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.ppm_done">
                         </div>
 
                         <!-- supplier -->
                         <div class="col mb-2">
                             <label class="form-label">Supplier</label>
-                            <input required type="text" class="form-control" spellcheck="false" ng-model="modalData.supplier">
+                            <input required type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.supplier">
                         </div>
 
                         <!-- model -->
@@ -274,6 +314,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
                         Cancel</button>
+                        <button ng-click="deleteEquipment()" class="btn btn-danger" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
                     <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
                         Confirm</button>
                 </div>

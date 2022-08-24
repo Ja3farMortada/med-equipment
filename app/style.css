@@ -25,3 +25,7 @@ a[ng-click] {
     cursor: pointer;
     user-select: none;
 }
+
+.pointer {
+    cursor: pointer;
+}
