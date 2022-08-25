@@ -11,6 +11,7 @@ const server = require('./server');
 
 // Check if electron is in development mode to enable Node.js on release mode
 
+var node;
 const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
 const getFromEnv = Number.parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
 const isDev = isEnvSet ? getFromEnv : !app.isPackaged;
@@ -22,7 +23,7 @@ if (!isDev) {
         if (err) return console.log(err);
         console.log(JSON.stringify(file));
         console.log('writing to ' + fileName);
-        var node = server.listen(3000, () => console.log(`listening on port ${3000} ...`));
+        node = server.listen(3000, () => console.log(`listening on port ${3000} ...`));
         });
 }
 
