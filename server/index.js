@@ -30,7 +30,9 @@ server.use(express.json());
 
 
 const homeRoutes = require('./routes/home.routes');
+const suppliersRoutes = require('./routes/suppliers.routes');
 
 homeRoutes(server, db);
+suppliersRoutes(server, db);
 
 module.exports = server;

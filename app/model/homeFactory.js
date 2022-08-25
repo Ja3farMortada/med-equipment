@@ -22,6 +22,7 @@ app.factory('homeFactory', function ($http, NotificationService) {
         }
     };
 
+    // get recent
     const getRecentEquipments = () => {
         $http.get(`${url}/getRecentEquipments`).then(results => {
             angular.copy(results.data, model.recentEquipments);
@@ -30,6 +31,11 @@ app.factory('homeFactory', function ($http, NotificationService) {
         });
     }
     getRecentEquipments();
+
+    // fetch recent
+    model.fetchRecent = () => {
+        getRecentEquipments();
+    }
 
     model.search = data => {
         return $http.post(`${url}/search`, data).then(response => {
@@ -58,7 +64,7 @@ app.factory('homeFactory', function ($http, NotificationService) {
 
     // delete
     model.deleteEquipment = ID => {
-        NotificationService.showWarning().then(ok => {
+        return NotificationService.showWarning().then(ok => {
             if (ok.isConfirmed) {
                 return $http.post(`${url}/deleteEquipment`, {ID:ID}).then(() => {
                     NotificationService.showSuccess();

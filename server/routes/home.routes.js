@@ -3,7 +3,7 @@ module.exports = (server, db) => {
     server.post('/search', (req, res) => {
         let data = req.body[0];
         let ppmData = req.body[1];
-        let query = `SELECT * FROM equipments WHERE `;
+        let query = `SELECT e.*, s.name AS supplier FROM equipments e INNER JOIN suppliers s ON supplier_ID_FK = supplier_ID WHERE `;
         let values = [];
         let count = 0;
         for (let i = 0; i < data.length; i++) {
@@ -42,7 +42,7 @@ module.exports = (server, db) => {
 
 
     server.get('/getRecentEquipments', (req, res) => {
-        let query = `SELECT * FROM equipments WHERE DATEDIFF(DATE(now()), date_added) < 10 AND record_status = 1`;
+        let query = `SELECT e.*, s.name AS supplier FROM equipments e INNER JOIN suppliers s ON supplier_ID_FK = supplier_ID WHERE DATEDIFF(DATE(now()), date_added) < 10 AND record_status = 1`;
         db.query(query, function(error, results) {
             if (error) {
                 res.status(400).send(error);

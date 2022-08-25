@@ -28,6 +28,7 @@ app.service('NotificationService', ['$timeout', function ($timeout) {
             text: `${error.data.sqlMessage}`,
             icon: 'error'
         });
+        console.log(error);
     };
 
     this.showErrorText = text => {

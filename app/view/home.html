@@ -282,8 +282,9 @@
                         <!-- supplier -->
                         <div class="col mb-2">
                             <label class="form-label">Supplier</label>
-                            <input required type="text" class="form-control" spellcheck="false"
-                                ng-model="modalData.supplier">
+                            <!-- <input required type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.supplier"> -->
+                            <select class="form-control" ng-model="modalData.supplier_ID_FK" ng-options="supplier.supplier_ID as supplier.name for supplier in suppliers"></select>
                         </div>
 
                         <!-- model -->
@@ -314,7 +315,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
                         Cancel</button>
-                        <button ng-click="deleteEquipment()" class="btn btn-danger" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
+                        <button ng-show="modalTitle == 'Edit Equipment'" ng-click="deleteEquipment()" class="btn btn-danger" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
                     <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
                         Confirm</button>
                 </div>

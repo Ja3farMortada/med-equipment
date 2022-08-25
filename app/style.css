@@ -29,3 +29,8 @@ a[ng-click] {
 .pointer {
     cursor: pointer;
 }
+
+.info-hover:hover {
+    background-color: #0dcaf0;
+    color: white !important;
+}

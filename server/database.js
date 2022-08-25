@@ -3,10 +3,10 @@ const keys = require('../keys.json');
 
 var pool = mysql.createPool({
     connectionLimit: 1,
-    host: keys.host,
-    user: keys.username,
+    host: 'localhost',
+    user: 'root',
     password: keys.password,
-    database: keys.database,
+    database: 'med-equipments',
     multipleStatements: true,
     dateStrings: 'date'
 });

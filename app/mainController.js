@@ -9,6 +9,11 @@ app.config(function ($routeProvider) {
             controller: 'homeController'
         })
 
+        .when('/suppliers', {
+            templateUrl: 'view/suppliers.html',
+            controller: 'suppliersController'
+        })
+
         .otherwise({
             redirectTo: '/home'
         });

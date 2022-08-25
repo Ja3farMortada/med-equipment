@@ -1,0 +1,93 @@
+
+<div class="row mt-3 mb-3">
+    <div class="col-1">
+        <hr>
+    </div>
+    <div class="col-auto d-flex justify-content-center align-items-center">
+        <h5 class="mb-0 text-secondary select-off"><i class="fas fa-truck-medical fa-lg fa-fw"></i> Suppliers</h5>
+    </div>
+    <div class="col">
+        <hr>
+    </div>
+</div>
+
+<button ng-click="openAddModal()" class="btn btn-outline-success"><i class="fas fa-plus fa-fw"></i> Add Supplier</button>
+
+
+<div class="row">
+    <div class="col-3 ms-auto">
+        <input type="text" class="form-control" placeholder="Search... " ng-model="searchVal">
+    </div>
+</div>
+<br>
+
+<table class="table table-sm table-bordered table-striped text-center">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Supplier Name</th>
+            <th>Phone Number</th>
+            <th>Address</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr dir-paginate="data in suppliers | itemsPerPage: 25 | filter: searchVal">
+            <td>{{ data.supplier_ID }}</td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.phone || ' --- ' }}</td>
+            <td>{{ data.address || ' --- ' }}</td>
+            <td ng-click="openEditModal(data)" class="pointer info-hover"><i class="fas fa-edit"></i></td>
+        </tr>
+    </tbody>
+</table>
+
+<dir-pagination-controls max-size="5" direction-links="true" boundary-links="false"
+    template-url="templates/dirPagination.tpl.html">
+</dir-pagination-controls>
+
+<!-- suppliers modal -->
+<div class="modal fade" tabindex="-1" id="suppliersModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ modalTitle }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form ng-submit="submit()">
+                <div class="modal-body">
+                    <div class="row row-cols-5">
+                        <!-- Supplier Name -->
+                        <div class="col mb-2">
+                            <label class="form-label">Supplier Name</label>
+                            <input autofocus required type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.name">
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="col mb-2">
+                            <label class="form-label">Phone</label>
+                            <input type="number" class="form-control" spellcheck="false"
+                                ng-model="modalData.phone">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col mb-2">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-control" spellcheck="false"
+                                ng-model="modalData.address">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
+                        Cancel</button>
+                        <button ng-show="modalTitle == 'Edit Supplier'" ng-click="deleteSupplier()" class="btn btn-danger" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
+                    <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
+                        Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

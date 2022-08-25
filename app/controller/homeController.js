@@ -1,9 +1,11 @@
-app.controller('homeController', function ($scope, homeFactory, DateService) {
+app.controller('homeController', function ($scope, homeFactory, DateService, suppliersFactory) {
 
 
     // bind with model
     $scope.equipments = homeFactory.equipments;
     $scope.recentEquipments = homeFactory.recentEquipments;
+
+    $scope.suppliers = suppliersFactory.suppliers;
 
     // Tabs selection
     $scope.tabSelected = homeFactory.tabSelected;
@@ -117,7 +119,7 @@ app.controller('homeController', function ($scope, homeFactory, DateService) {
             installation_date: null,
             ppm_schedule: null,
             ppm_done: null,
-            supplier: null,
+            supplier_ID_FK: null,
             model: null,
             serial_no: null,
             maker: null,
@@ -152,6 +154,7 @@ app.controller('homeController', function ($scope, homeFactory, DateService) {
                 homeFactory.submitEditEquipment($scope.modalData);
                 equipmentsModal.hide();
                 homeFactory.search([$scope.searchArray, $scope.ppmValue]);
+                homeFactory.fetchRecent();
                 break;
         }
     }
