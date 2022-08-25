@@ -10,23 +10,21 @@ const fs = require('fs')
 const server = require('./server');
 
 // Check if electron is in development mode to enable Node.js on release mode
-function startServer() {
-    const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
-    const getFromEnv = Number.parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
-    const isDev = isEnvSet ? getFromEnv : !app.isPackaged;
-    if (!isDev) {
-        var fileName = './keys.json'
-        var file = require(fileName)
-        file.password = '';
-        fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
-            if (err) return console.log(err);
-            console.log(JSON.stringify(file));
-            console.log('writing to ' + fileName);
-            var node = server.listen(3000, () => console.log(`listening on port ${3000} ...`));
-          });
-    }
+
+const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
+const getFromEnv = Number.parseInt(process.env.ELECTRON_IS_DEV, 10) === 1;
+const isDev = isEnvSet ? getFromEnv : !app.isPackaged;
+if (!isDev) {
+    var fileName = './keys.json'
+    var file = require(fileName)
+    file.password = '';
+    fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
+        if (err) return console.log(err);
+        console.log(JSON.stringify(file));
+        console.log('writing to ' + fileName);
+        var node = server.listen(3000, () => console.log(`listening on port ${3000} ...`));
+        });
 }
-startServer()
 
 function createWindow() {
     const win = new BrowserWindow({
