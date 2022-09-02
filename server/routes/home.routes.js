@@ -74,6 +74,7 @@ module.exports = (server, db) => {
     // Edit Equipment
     server.post('/editEquipment', (req, res) => {
         let data = req.body;
+        delete data['supplier']
         let query = `UPDATE equipments SET ? WHERE record_ID = ${data.record_ID}`;
         db.query(query, data, function(error, result) {
             if (error) {

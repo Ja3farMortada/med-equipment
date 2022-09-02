@@ -135,6 +135,7 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
         $scope.modalTitle = 'Edit Equipment';
         $scope.modalData = {};
         angular.copy(data, $scope.modalData);
+        console.log($scope.modalData);
         equipmentsModal.show();
     }
 

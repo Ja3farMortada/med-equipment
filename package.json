@@ -1,6 +1,6 @@
 {
     "name": "med-equipment",
-    "version": "1.4.4",
+    "version": "1.4.5",
     "description": "Medical Equipment Manager",
     "main": "main.js",
     "scripts": {
