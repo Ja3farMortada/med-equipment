@@ -74,7 +74,7 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
         value: null
     }, {
         label: 'Supplier',
-        column: 'supplier',
+        column: 's.name',
         value: null
     }];
 
