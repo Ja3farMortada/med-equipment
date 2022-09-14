@@ -21,7 +21,7 @@
     background-color: #0c1e6e10 !important;
 }
 
-a[ng-click] {
+[ng-click] {
     cursor: pointer;
     user-select: none;
 }
@@ -32,5 +32,20 @@ a[ng-click] {
 
 .info-hover:hover {
     background-color: #0dcaf0;
+    color: white !important;
+}
+
+.dark-hover:hover {
+    background-color: #343a40;
+    color: white !important;
+}
+
+.warning-hover:hover {
+    background-color: #ffc107;
+    color: white !important;
+}
+
+.danger-hover:hover {
+    background-color: #dc3545;
     color: white !important;
 }

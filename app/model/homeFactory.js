@@ -66,7 +66,9 @@ app.factory('homeFactory', function ($http, NotificationService) {
     model.deleteEquipment = ID => {
         return NotificationService.showWarning().then(ok => {
             if (ok.isConfirmed) {
-                return $http.post(`${url}/deleteEquipment`, {ID:ID}).then(() => {
+                return $http.post(`${url}/deleteEquipment`, {
+                    ID: ID
+                }).then(() => {
                     NotificationService.showSuccess();
                     return 1;
                 }, error => {
@@ -74,6 +76,19 @@ app.factory('homeFactory', function ($http, NotificationService) {
                     return 0;
                 })
             }
+        })
+    }
+
+    model.getService = ID => {
+        console.log(ID);
+        return $http.get(`${url}/getService`, {
+            params: {
+                ID: ID
+            }
+        }).then(response => {
+            return response.data;
+        }, error => {
+            NotificationService.showError(error);
         })
     }
 

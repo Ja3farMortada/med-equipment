@@ -169,4 +169,23 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
         })
     }
 
+    // define modal
+    const infoModal = new bootstrap.Modal('#infoModal');
+    // More info modal
+    $scope.moreInfoModal = data => {
+        $scope.moreInfoData = data;
+        infoModal.show();
+    }
+
+
+    // define modal
+    const serviceModal = new bootstrap.Modal('#serviceModal');
+    $scope.openServiceModal = data => {
+        homeFactory.getService(data.record_ID).then(response => {
+            angular.copy(response, $scope.serviceModalData);
+            serviceModal.show();
+        })
+
+    }
+
 });

@@ -1,3 +1,5 @@
+const e = require("express");
+
 module.exports = (server, db) => {
 
     server.post('/search', (req, res) => {
@@ -96,5 +98,27 @@ module.exports = (server, db) => {
                 res.send('');
             }
         });
-    })
+    });
+
+    // get service records
+    server.get('/getService', (req, res) => {
+        let ID = req.query.ID;
+        let query = `SELECT * FROM service_history WHERE equipment_ID_FK = ?`;
+        function doQuery() {
+            db.query(query, ID, function (error, results) {
+                if (error) {
+                    if (error.code == 'ER_NO_SUCH_TABLE') {
+                        let query2 = 'CREATE TABLE `med-equipments`.`service_history` (`service_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `service_description` VARCHAR(100) NOT NULL , `service_date` DATE NOT NULL , `service_time` TIME NOT NULL , `service_status` INT NOT NULL , PRIMARY KEY (`service_ID`)) ENGINE = InnoDB;';
+                        db.query(query2)
+                    } else {
+                        res.status(400).send(error);
+                    }
+                    doQuery();
+                } else {
+                    res.send(results);
+                }
+            });
+        }
+        doQuery();
+    });
 }

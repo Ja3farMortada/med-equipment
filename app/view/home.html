@@ -103,7 +103,7 @@
             </div>
         </div> -->
         </div>
-        <table class="table table-hover table-striped table-sm table-bordered text-center">
+        <table class="table table-striped table-sm table-bordered text-center">
             <caption><b>Total Results:</b>
                 {{ equipments.length.toLocaleString() }}</caption>
             <thead>
@@ -111,7 +111,7 @@
                     <th colspan="3">ASSET</th>
                     <th colspan="2">LOCATION</th>
                     <th colspan="4">SUPPLIER</th>
-                    <th colspan="4">ASSET INFORMATION</th>
+                    <th colspan="7">ASSET INFORMATION</th>
                 </tr>
                 <tr class="bg-secondary">
                     <th width="3%" style="padding: 0.5rem 0.5rem !important;">#</th>
@@ -125,13 +125,12 @@
                     <th style="padding: 0.5rem 0.5rem !important;">Supplier</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Model</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Serial No.</th>
-                    <th style="padding: 0.5rem 0.5rem !important;">Maker/Origin</th>
-                    <th style="padding: 0.5rem 0.5rem !important;">Remarks</th>
+                    <th width="20%" colspan="3" style="padding: 0.5rem 0.5rem !important;">Options</th>
+                    <!-- <th style="padding: 0.5rem 0.5rem !important;">More Info</th> -->
                 </tr>
             </thead>
             <tbody>
-                <tr dir-paginate="data in equipments | itemsPerPage:20 | filter:searchVal" class="small pointer"
-                    ng-dblclick="openEditEquipmentModal(data)">
+                <tr dir-paginate="data in equipments | itemsPerPage:20 | filter:searchVal" class="small">
                     <td>{{ data.record_ID }}</td>
                     <td>{{ data.description }}</td>
                     <td>{{ data.asset_no }}</td>
@@ -145,12 +144,14 @@
                     <td>{{ data.supplier }}</td>
                     <td>{{ data.model }}</td>
                     <td>{{ data.serial_no }}</td>
-                    <td>{{ data.maker }}</td>
-                    <td>{{ data.notes || ' --- ' }}</td>
+
+                    <td width="6%" ng-click="openEditEquipmentModal(data)" class="info-hover text-info"><i class="fas fa-edit"></i> Edit</td>
+                    <td width="7%" ng-click="openServiceModal(data)" class="danger-hover text-danger"><i class="fas fa-wrench"></i> Service</td>
+                    <td ng-click="moreInfoModal(data)" class="dark-hover text-dark"><i class="fas fa-info-circle"></i> More Info</td>
                 </tr>
 
                 <tr ng-if="equipments.length === 0">
-                    <td colspan="13" class="table-secondary">No Records Yet!</td>
+                    <td colspan="14" class="table-secondary">No Records Yet!</td>
                 </tr>
 
 
@@ -162,7 +163,7 @@
 
     </div>
 </section>
-<!-- end firtst tab -->
+<!-- end first tab -->
 
 <!-- SECOND TAB -->
 <section ng-show="tabSelected == 1">
@@ -211,6 +212,10 @@
                 <td>{{ record.serial_no }}</td>
                 <td>{{ record.maker }}</td>
                 <td>{{ record.date_added }}</td>
+            </tr>
+
+            <tr>
+                <td colspan="10" ng-if="recentEquipments.length == 0">No recently added equipments in the last 10 days !</td>
             </tr>
         </tbody>
     </table>
@@ -316,6 +321,58 @@
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
                         Cancel</button>
                         <button ng-show="modalTitle == 'Edit Equipment'" ng-click="deleteEquipment()" class="btn btn-danger" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
+                    <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
+                        Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Info modal -->
+<div class="modal fade" tabindex="-1" id="infoModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-info-circle fa-lg"></i> {{ moreInfoData.description }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <label><b>Maker/Origin:</b> {{ moreInfoData.maker }}</label>
+                    <br>
+                    <label><b>Remarks:</b> {{ moreInfoData.notes || ' --- '}}</label>
+                    <br>
+                    <hr>
+                    <!-- add table -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
+                        Cancel</button>
+                    <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
+                        Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- service modal -->
+<div class="modal fade" tabindex="-1" id="serviceModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-wrench fa-lg"></i> {{ serviceModalData.description }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
+                        Cancel</button>
                     <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
                         Confirm</button>
                 </div>
