@@ -32,7 +32,7 @@ module.exports = (server, db) => {
                 query += `DATEDIFF(ppm_schedule, DATE(now())) < 0 AND record_status = 1`;
                 break;
         }
-        db.query(query, values, function(error, results) {
+        db.query(query, values, function (error, results) {
             if (error) {
                 res.status(400).send(error);
             } else {
@@ -45,7 +45,7 @@ module.exports = (server, db) => {
 
     server.get('/getRecentEquipments', (req, res) => {
         let query = `SELECT e.*, s.name AS supplier FROM equipments e INNER JOIN suppliers s ON supplier_ID_FK = supplier_ID WHERE DATEDIFF(DATE(now()), date_added) < 10 AND record_status = 1`;
-        db.query(query, function(error, results) {
+        db.query(query, function (error, results) {
             if (error) {
                 res.status(400).send(error);
             } else {
@@ -58,11 +58,11 @@ module.exports = (server, db) => {
     server.post('/addEquipment', (req, res) => {
         let data = req.body;
         let query = `INSERT INTO equipments SET ?`;
-        db.query(query, data, function(error, result) {
+        db.query(query, data, function (error, result) {
             if (error) {
                 res.status(400).send(error);
             } else {
-                db.query(`SELECT * FROM equipments WHERE record_ID = ${result.insertId}`, function(error, result) {
+                db.query(`SELECT * FROM equipments WHERE record_ID = ${result.insertId}`, function (error, result) {
                     if (error) {
                         res.status(400).send(error);
                     } else {
@@ -78,7 +78,7 @@ module.exports = (server, db) => {
         let data = req.body;
         delete data['supplier']
         let query = `UPDATE equipments SET ? WHERE record_ID = ${data.record_ID}`;
-        db.query(query, data, function(error, result) {
+        db.query(query, data, function (error, result) {
             if (error) {
                 res.status(400).send(error);
             } else {
@@ -91,7 +91,7 @@ module.exports = (server, db) => {
     server.post('/deleteEquipment', (req, res) => {
         let ID = req.body.ID;
         let query = `DELETE FROM equipments WHERE record_ID = ?`;
-        db.query(query, ID, function(error, result) {
+        db.query(query, ID, function (error, result) {
             if (error) {
                 res.status(400).send(error);
             } else {
@@ -104,6 +104,7 @@ module.exports = (server, db) => {
     server.get('/getService', (req, res) => {
         let ID = req.query.ID;
         let query = `SELECT * FROM service_history WHERE equipment_ID_FK = ?`;
+
         function doQuery() {
             db.query(query, ID, function (error, results) {
                 if (error) {
@@ -131,16 +132,20 @@ module.exports = (server, db) => {
             if (error) {
                 res.status(400).send(error);
             } else {
-                let ID = data.equipment_ID_FK;
-                let date = data.service_date;
-                let query2 = `UPDATE equipments SET ppm_done = ? WHERE record_ID = ?`;
-                db.query(query2, [date, ID], function(error) {
-                    if (error) {
-                        res.status(400).send(error);
-                    } else {
-                        res.send('');
-                    }
-                })
+                if (data.service_type == 'ppm') {
+                    let ID = data.equipment_ID_FK;
+                    let date = data.service_date;
+                    let query2 = `UPDATE equipments SET ppm_done = ? WHERE record_ID = ?`;
+                    db.query(query2, [date, ID], function (error) {
+                        if (error) {
+                            res.status(400).send(error);
+                        } else {
+                            res.send('');
+                        }
+                    })
+                } else {
+                    res.send('');
+                }
             }
         })
     })
@@ -149,6 +154,7 @@ module.exports = (server, db) => {
     server.get('/getExtensions', (req, res) => {
         let ID = req.query.ID;
         let query = `SELECT * FROM eq_extensions WHERE ext_ID = ?`;
+
         function doQuery() {
             db.query(query, ID, function (error, results) {
                 if (error) {
