@@ -108,7 +108,7 @@ module.exports = (server, db) => {
             db.query(query, ID, function (error, results) {
                 if (error) {
                     if (error.code == 'ER_NO_SUCH_TABLE') {
-                        let query2 = 'CREATE TABLE `med-equipments`.`service_history` (`service_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `service_description` VARCHAR(100) NOT NULL , `service_date` DATE NOT NULL , `service_time` TIME NOT NULL , `service_status` INT NOT NULL , PRIMARY KEY (`service_ID`)) ENGINE = InnoDB;';
+                        let query2 = 'CREATE TABLE `med-equipments`.`service_history` (`service_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `service_type` VARCHAR(10) NOT NULL , `service_description` VARCHAR(100) NOT NULL , `service_date` DATE NOT NULL , `service_time` TIME NOT NULL , `service_notes` VARCHAR(100) NULL, `service_status` BOOLEAN NOT NULL  DEFAULT 1, PRIMARY KEY (`service_ID`)) ENGINE = InnoDB;';
                         db.query(query2)
                     } else {
                         res.status(400).send(error);
@@ -121,4 +121,62 @@ module.exports = (server, db) => {
         }
         doQuery();
     });
+
+
+    // add new service
+    server.post('/addNewService', (req, res) => {
+        let data = req.body.data;
+        let query = `INSERT INTO service_history SET ?`;
+        db.query(query, data, function (error) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                let ID = data.equipment_ID_FK;
+                let date = data.service_date;
+                let query2 = `UPDATE equipments SET ppm_done = ? WHERE record_ID = ?`;
+                db.query(query2, [date, ID], function(error) {
+                    if (error) {
+                        res.status(400).send(error);
+                    } else {
+                        res.send('');
+                    }
+                })
+            }
+        })
+    })
+
+    // getExtensions
+    server.get('/getExtensions', (req, res) => {
+        let ID = req.query.ID;
+        let query = `SELECT * FROM eq_extensions WHERE ext_ID = ?`;
+        function doQuery() {
+            db.query(query, ID, function (error, results) {
+                if (error) {
+                    if (error.code == 'ER_NO_SUCH_TABLE') {
+                        let query2 = 'CREATE TABLE `med-equipments`.`eq_extensions` (`ext_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `ext_name` VARCHAR(50) NOT NULL , `ext_serial_no` VARCHAR(50) NULL ,  `ext_notes` VARCHAR(100) NULL, `ext_status` BOOLEAN NOT NULL  DEFAULT 1, PRIMARY KEY (`ext_ID`)) ENGINE = InnoDB;';
+                        db.query(query2)
+                    } else {
+                        res.status(400).send(error);
+                    }
+                    doQuery();
+                } else {
+                    res.send(results);
+                }
+            });
+        }
+        doQuery();
+    });
+
+    // addExtension
+    server.post('/addExtension', (req, res) => {
+        let data = req.body.data;
+        let query = `INSERT INTO eq_extensions SET ?`;
+        db.query(query, data, function (error) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                res.send('');
+            }
+        })
+    })
 }

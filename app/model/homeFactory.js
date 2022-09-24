@@ -80,7 +80,6 @@ app.factory('homeFactory', function ($http, NotificationService) {
     }
 
     model.getService = ID => {
-        console.log(ID);
         return $http.get(`${url}/getService`, {
             params: {
                 ID: ID
@@ -90,6 +89,54 @@ app.factory('homeFactory', function ($http, NotificationService) {
         }, error => {
             NotificationService.showError(error);
         })
+    }
+
+    // submit new service
+    model.submitNewService = data => {
+        return $http.post(`${url}/addNewService`, {
+            data: data
+        }).then(() => {
+            NotificationService.showSuccess();
+            return 'added';
+        }, error => {
+            NotificationService.showError(error);
+        })
+    }
+
+
+    // get extension info
+    model.getExtensions = ID => {
+        return $http.get(`${url}/getExtensions`, {
+            params: {
+                ID: ID
+            }
+        }).then(response => {
+            return response.data;
+        }, error => {
+            NotificationService.showError(error);
+        })
+    }
+
+    // add extension
+    model.addExtension = data => {
+        return $http.post(`${url}/addExtension`, {
+            data: data
+        }).then(() => {
+            NotificationService.showSuccess();
+            return 'added';
+        }, error => {
+            NotificationService.showError(error);
+        })
+    }
+
+    // export excel
+    model.exportExcel = async data => {
+        let response = await window.electron.send('export-excel', data);
+        if (response == 'success') {
+            NotificationService.showSuccess();
+        } else if (response == 'error') {
+            NotificationService.showError('error')
+        }
     }
 
     return model;
