@@ -103,6 +103,18 @@ app.factory('homeFactory', function ($http, NotificationService) {
         })
     }
 
+    // delete service
+    model.deleteService = ID => {
+        return $http.post(`${url}/deleteService`, {
+            ID: ID
+        }).then(() => {
+            NotificationService.showSuccess();
+            return 'deleted';
+        }, error => {
+            NotificationService.showError(error);
+        })
+    }
+
 
     // get extension info
     model.getExtensions = ID => {
@@ -124,6 +136,18 @@ app.factory('homeFactory', function ($http, NotificationService) {
         }).then(() => {
             NotificationService.showSuccess();
             return 'added';
+        }, error => {
+            NotificationService.showError(error);
+        })
+    }
+
+    // delete extension
+    model.deleteExtension = ID => {
+        return $http.post(`${url}/deleteExtension`, {
+            ID: ID
+        }).then(() => {
+            NotificationService.showSuccess();
+            return 'deleted';
         }, error => {
             NotificationService.showError(error);
         })

@@ -103,7 +103,7 @@ module.exports = (server, db) => {
     // get service records
     server.get('/getService', (req, res) => {
         let ID = req.query.ID;
-        let query = `SELECT * FROM service_history WHERE equipment_ID_FK = ?`;
+        let query = `SELECT * FROM service_history WHERE equipment_ID_FK = ? AND service_status = 1`;
 
         function doQuery() {
             db.query(query, ID, function (error, results) {
@@ -135,8 +135,8 @@ module.exports = (server, db) => {
                 if (data.service_type == 'ppm') {
                     let ID = data.equipment_ID_FK;
                     let date = data.service_date;
-                    let query2 = `UPDATE equipments SET ppm_done = ? WHERE record_ID = ?`;
-                    db.query(query2, [date, ID], function (error) {
+                    let query2 = `UPDATE equipments SET ppm_done = ? WHERE record_ID = ?; UPDATE equipments SET  ppm_schedule = DATE_ADD(ppm_schedule, INTERVAL 1 YEAR) WHERE record_ID = ?`;
+                    db.query(query2, [date, ID, ID], function (error) {
                         if (error) {
                             res.status(400).send(error);
                         } else {
@@ -150,10 +150,23 @@ module.exports = (server, db) => {
         })
     })
 
+    // delete service
+    server.post('/deleteService', (req, res) => {
+        let ID = req.body.ID;
+        let query = `UPDATE service_history SET service_status = 0 WHERE service_ID = ?`;
+        db.query(query, ID, function (error) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                res.send('')
+            }
+        })
+    })
+
     // getExtensions
     server.get('/getExtensions', (req, res) => {
         let ID = req.query.ID;
-        let query = `SELECT * FROM eq_extensions WHERE ext_ID = ?`;
+        let query = `SELECT * FROM eq_extensions WHERE equipment_ID_FK = ? AND ext_status = 1`;
 
         function doQuery() {
             db.query(query, ID, function (error, results) {
@@ -182,6 +195,19 @@ module.exports = (server, db) => {
                 res.status(400).send(error);
             } else {
                 res.send('');
+            }
+        })
+    })
+
+    // deleteExtension
+    server.post('/deleteExtension', (req, res) => {
+        let ID = req.body.ID;
+        let query = `UPDATE eq_extensions SET ext_status = 0 WHERE ext_ID = ?`;
+        db.query(query, ID, function (error) {
+            if (error) {
+                res.status(400).send(error);
+            } else {
+                res.send('')
             }
         })
     })

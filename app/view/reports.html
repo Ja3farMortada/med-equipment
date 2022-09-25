@@ -1,0 +1,40 @@
+<div class="row g-1 justify-content-center align-items-center mt-3">
+    <div class="col-auto">
+        <label class="col-form-label">Select Year:</label>
+    </div>
+    <div class="col-auto">
+        <select class="form-control" ng-model="selectedYear" ng-model="selectedYear" ng-change="getReports()">
+            <option ng-value="{{ year }}" ng-repeat="year in years">{{ year }}</option>
+        </select>
+    </div>
+</div>
+
+<div class="row justify-content-between mt-5">
+    <div class="col-4">
+        <h6 class="text-center">Top Serviced Equipments (without PPM)</h6>
+        <canvas id="topServiced"></canvas>
+        <br>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Asset No.</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="data in topServiced">
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.asset }}</td>
+                    <td>{{ data.count }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="col-7">
+        <h6 class="text-center">Services Done by Month (including PPM)</h6>
+        <canvas id="serviceReport"></canvas>
+    </div>
+</div>

@@ -355,9 +355,10 @@
                     <table class="table table-bordered text-center">
                         <thead>
                             <tr>
-                                <th>Extension Name</th>
+                                <th>Name</th>
                                 <th>Serial No.</th>
                                 <th>Notes</th>
+                                <th>Del?</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -365,9 +366,10 @@
                                 <td>{{ data.ext_name }}</td>
                                 <td>{{ data.ext_serial_no || ' --- ' }}</td>
                                 <td>{{ data.ext_notes || ' --- ' }}</td>
+                                <td ng-click="deleteExtension($index, data.ext_ID)" class="danger-hover text-danger"><i class="fas fa-trash-alt"></i></td>
                             </tr>
                             <tr ng-show="extensionData.length == 0">
-                                <td class="table-active" colspan="3">No Extensions Yet!</td>
+                                <td class="table-active" colspan="4">No Extensions Yet!</td>
                             </tr>
                         </tbody>
                     </table>
@@ -422,6 +424,7 @@
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>Notes</th>
+                                <th>Del?</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -432,10 +435,11 @@
                                 <td>{{ data.service_date }}</td>
                                 <td>{{ data.service_time }}</td>
                                 <td>{{ data.service_notes || ' --- ' }}</td>
+                                <td ng-click="deleteService($index, data.service_ID)" class="danger-hover text-danger"><i class="fas fa-trash-alt"></i></td>
                             </tr>
 
                             <tr class="table-active" ng-show="serviceModalData.length == 0">
-                                <td colspan="6">No Services Yet!</td>
+                                <td colspan="7">No Services Yet!</td>
                             </tr>
                         </tbody>
                     </table>
@@ -444,11 +448,12 @@
                     <h6><i class="fas fa-plus"></i> Add Maintenance Record</h6>
                     <div class="row">
                         <div class="col-3">
-                            <label>Service Description</label>
+                            <label>Service Type</label>
                             <select class="form-control" ng-model="newServiceData.service_type">
                                 <option value="ppm">PPM</option>
                                 <option value="other">Other</option>
                             </select>
+                            <div class="form-text"><span class="text-danger">*Notice:</span> Adding PPM record will update PPM schedule automatically.</div>
                         </div>
                         <div class="col-3">
                             <label>Service Description</label>

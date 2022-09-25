@@ -1,4 +1,4 @@
-app.controller('homeController', function ($scope, homeFactory, DateService, suppliersFactory) {
+app.controller('homeController', function ($scope, homeFactory, DateService, suppliersFactory, NotificationService) {
 
 
     // bind with model
@@ -182,6 +182,7 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
         }
         homeFactory.getExtensions(data.record_ID).then(response => {
             angular.copy(response, $scope.extensionData);
+            console.log($scope.extensionData);
             infoModal.show();
         })
     }
@@ -193,6 +194,19 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
             }
         })
     }
+    // delete extension
+    $scope.deleteExtension = (index, ID) => {
+        NotificationService.showWarning().then(res => {
+            if (res.isConfirmed) {
+                homeFactory.deleteExtension(ID).then(res => {
+                    if (res == 'deleted') {
+                        $scope.extensionData.splice(index, 1);
+                    }
+                })
+            }
+        })
+    }
+
     // define modal
     const serviceModal = new bootstrap.Modal('#serviceModal');
     $scope.openServiceModal = data => {
@@ -215,6 +229,18 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
         homeFactory.submitNewService($scope.newServiceData).then(response => {
             if (response == 'added') {
                 serviceModal.hide();
+            }
+        })
+    }
+    // delete service
+    $scope.deleteService = (index, ID) => {
+        NotificationService.showWarning().then(res => {
+            if (res.isConfirmed) {
+                homeFactory.deleteService(ID).then(response => {
+                    if (response) {
+                        $scope.serviceModalData.splice(index, 1);
+                    }
+                })
             }
         })
     }

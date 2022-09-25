@@ -14,6 +14,11 @@ app.config(function ($routeProvider) {
             controller: 'suppliersController'
         })
 
+        .when('/reports', {
+            templateUrl: 'view/reports.html',
+            controller: 'reportsController'
+        })
+
         .otherwise({
             redirectTo: '/home'
         });
