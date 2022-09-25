@@ -20,6 +20,7 @@
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/angular/angular.min.js"></script>
     <script src="../node_modules/angular-route/angular-route.min.js"></script>
+    <script src="../node_modules/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="../node_modules/angular-utils-pagination/dirPagination.js"></script>
     <script src="../node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="../node_modules/moment/moment.js"></script>
@@ -161,6 +162,7 @@
 
                     <!-- text -->
                     <h6 class="text-center mt-3">{{text}}</h6>
+                    <p ng-bind-html="releaseNotes"></p>
 
                     <!-- spinner -->
                     <div class="d-flex justify-content-center mt-3" ng-if="showSpinner">

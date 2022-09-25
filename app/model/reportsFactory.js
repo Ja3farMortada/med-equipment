@@ -29,7 +29,6 @@ app.factory('reportsFactory', function ($http, NotificationService) {
         }).then(function (response) {
             angular.copy(response.data, model.topServiced);
             model.topServicedChart();
-            console.log(response.data);
         }, function (error) {
             NotificationService.showError(error);
         });

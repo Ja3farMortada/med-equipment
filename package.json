@@ -1,6 +1,6 @@
 {
     "name": "med-equipment",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "description": "Medical Equipment Manager",
     "main": "main.js",
     "scripts": {
@@ -41,6 +41,7 @@
         "@sweetalert2/themes": "^5.0.11",
         "angular": "^1.8.3",
         "angular-route": "^1.8.3",
+        "angular-sanitize": "^1.8.3",
         "angular-utils-pagination": "^0.11.1",
         "bootstrap": "^5.2.0",
         "chart.js": "^3.9.1",
