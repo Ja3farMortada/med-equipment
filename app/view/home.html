@@ -125,7 +125,7 @@
                     <th style="padding: 0.5rem 0.5rem !important;">Supplier</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Model</th>
                     <th style="padding: 0.5rem 0.5rem !important;">Serial No.</th>
-                    <th width="20%" colspan="3" style="padding: 0.5rem 0.5rem !important;">Options</th>
+                    <th width="18%" colspan="3" style="padding: 0.5rem 0.5rem !important;">Options</th>
                     <!-- <th style="padding: 0.5rem 0.5rem !important;">More Info</th> -->
                 </tr>
             </thead>
@@ -145,8 +145,8 @@
                     <td>{{ data.model }}</td>
                     <td>{{ data.serial_no }}</td>
 
-                    <td width="6%" ng-click="openEditEquipmentModal(data)" class="info-hover text-info"><i class="fas fa-edit"></i> Edit</td>
-                    <td width="7%" ng-click="openServiceModal(data)" class="danger-hover text-danger"><i class="fas fa-wrench"></i> Service</td>
+                    <td width="5%" ng-click="openEditEquipmentModal(data)" class="info-hover text-info"><i class="fas fa-edit"></i> Edit</td>
+                    <td width="6%" ng-click="openServiceModal(data)" class="danger-hover text-danger"><i class="fas fa-wrench"></i> Service</td>
                     <td ng-click="moreInfoModal(data)" class="dark-hover text-dark"><i class="fas fa-info-circle"></i> More Info</td>
                 </tr>
 
