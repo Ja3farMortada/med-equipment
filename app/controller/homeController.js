@@ -1,4 +1,4 @@
-app.controller('homeController', function ($scope, homeFactory, DateService, suppliersFactory) {
+app.controller('homeController', function ($scope, homeFactory, DateService, suppliersFactory, NotificationService) {
 
 
     // bind with model
@@ -115,7 +115,7 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
             description: null,
             asset_no: null,
             department: null,
-            est_report: false,
+            est_report: 0,
             installation_date: null,
             ppm_schedule: null,
             ppm_done: null,
@@ -135,7 +135,6 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
         $scope.modalTitle = 'Edit Equipment';
         $scope.modalData = {};
         angular.copy(data, $scope.modalData);
-        console.log($scope.modalData);
         equipmentsModal.show();
     }
 
@@ -171,21 +170,84 @@ app.controller('homeController', function ($scope, homeFactory, DateService, sup
 
     // define modal
     const infoModal = new bootstrap.Modal('#infoModal');
-    // More info modal
+    // Open more info modal
     $scope.moreInfoModal = data => {
         $scope.moreInfoData = data;
-        infoModal.show();
+        $scope.extensionData = [];
+        $scope.newExtensionData = {
+            equipment_ID_FK: data.record_ID,
+            ext_name: null,
+            ext_serial_no: null,
+            ext_notes: null
+        }
+        homeFactory.getExtensions(data.record_ID).then(response => {
+            angular.copy(response, $scope.extensionData);
+            console.log($scope.extensionData);
+            infoModal.show();
+        })
     }
-
+    // add extension
+    $scope.addExtension = () => {
+        homeFactory.addExtension($scope.newExtensionData).then(response => {
+            if(response == 'added') {
+                infoModal.hide()
+            }
+        })
+    }
+    // delete extension
+    $scope.deleteExtension = (index, ID) => {
+        NotificationService.showWarning().then(res => {
+            if (res.isConfirmed) {
+                homeFactory.deleteExtension(ID).then(res => {
+                    if (res == 'deleted') {
+                        $scope.extensionData.splice(index, 1);
+                    }
+                })
+            }
+        })
+    }
 
     // define modal
     const serviceModal = new bootstrap.Modal('#serviceModal');
     $scope.openServiceModal = data => {
+        $scope.serviceModalData = [];
+        $scope.newServiceData = {
+            equipment_ID_FK: data.record_ID,
+            service_type: 'ppm',
+            service_description: null,
+            service_date: DateService.getDate(),
+            service_time: DateService.getTime(),
+            service_notes: null
+        }
         homeFactory.getService(data.record_ID).then(response => {
             angular.copy(response, $scope.serviceModalData);
             serviceModal.show();
         })
+    }
+    // submit new service
+    $scope.submitNewService = () => {
+        homeFactory.submitNewService($scope.newServiceData).then(response => {
+            if (response == 'added') {
+                serviceModal.hide();
+            }
+        })
+    }
+    // delete service
+    $scope.deleteService = (index, ID) => {
+        NotificationService.showWarning().then(res => {
+            if (res.isConfirmed) {
+                homeFactory.deleteService(ID).then(response => {
+                    if (response) {
+                        $scope.serviceModalData.splice(index, 1);
+                    }
+                })
+            }
+        })
+    }
 
+    // export excel
+    $scope.exportExcel = () => {
+        homeFactory.exportExcel($scope.equipments);
     }
 
 });

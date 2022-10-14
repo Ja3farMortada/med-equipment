@@ -9,4 +9,9 @@ app.service('DateService', function () {
         var d = new Date();
         return d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
     };
+
+    this.getYear = () => {
+        var d = new Date();
+        return d.getFullYear();
+    }
 });

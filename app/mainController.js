@@ -1,4 +1,4 @@
-const app = angular.module('mainApp', ['angularUtils.directives.dirPagination', 'ngRoute']);
+const app = angular.module('mainApp', ['angularUtils.directives.dirPagination', 'ngRoute', 'ngSanitize']);
 
 app.config(function ($routeProvider) {
     
@@ -12,6 +12,11 @@ app.config(function ($routeProvider) {
         .when('/suppliers', {
             templateUrl: 'view/suppliers.html',
             controller: 'suppliersController'
+        })
+
+        .when('/reports', {
+            templateUrl: 'view/reports.html',
+            controller: 'reportsController'
         })
 
         .otherwise({
@@ -75,6 +80,7 @@ app.controller('mainController', function ($scope, mainFactory) {
         $scope.$digest($scope.text = data);
     });
     window.electron.receive('update-available', function (data) {
+        $scope.$digest($scope.releaseNotes = data.releaseNotes);
         $scope.$digest($scope.showSpinner = false);
         $scope.$digest($scope.download = true);
         $scope.$digest($scope.text = `version ${data.version} is available.`);

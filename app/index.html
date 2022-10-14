@@ -20,9 +20,11 @@
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/angular/angular.min.js"></script>
     <script src="../node_modules/angular-route/angular-route.min.js"></script>
+    <script src="../node_modules/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="../node_modules/angular-utils-pagination/dirPagination.js"></script>
     <script src="../node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="../node_modules/moment/moment.js"></script>
+    <script src="../node_modules/chart.js/dist/chart.min.js"></script>
 
     <!-- Load Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
@@ -46,10 +48,13 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#!/home"><i class="fas fa-house-medical"></i> Home</a>
+                        <a class="nav-link" href="#!/home"><i class="fas fa-syringe"></i> First IVF</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#!/suppliers"><i class="fas fa-truck-medical"></i> Suppliers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#!/reports"><i class="fas fa-chart-line"></i> Reports</a>
                     </li>
                     <!-- <li class="nav-item">
                         <a class="nav-link" href="#!/hotels"><i class="fas fa-hotel">Main 2</i></a>
@@ -70,8 +75,10 @@
                             <li>
                                 <hr class="dropdown-divider">
                             </li> -->
-                            <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#aboutModal"><i class="fas fa-info-circle fa-lg fa-fw"></i> About</a></li>
-                            <li><a class="dropdown-item" href="" ng-click="openUpdateModal()"><i class="fas fa-sync-alt fa-lg fa-fw"></i> Check For Updates</a></li>
+                            <li><a class="dropdown-item" href="" data-bs-toggle="modal" data-bs-target="#aboutModal"><i
+                                        class="fas fa-info-circle fa-lg fa-fw"></i> About</a></li>
+                            <li><a class="dropdown-item" href="" ng-click="openUpdateModal()"><i
+                                        class="fas fa-sync-alt fa-lg fa-fw"></i> Check For Updates</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -92,7 +99,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    
+
                     <!-- <h5>Dependencies:</h5> -->
                     <br>
                     <table class="table table-bordered table-sm text-center">
@@ -134,7 +141,8 @@
                     </ul> -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i>
+                        Close</button>
                 </div>
             </div>
         </div>
@@ -154,6 +162,7 @@
 
                     <!-- text -->
                     <h6 class="text-center mt-3">{{text}}</h6>
+                    <p ng-bind-html="releaseNotes"></p>
 
                     <!-- spinner -->
                     <div class="d-flex justify-content-center mt-3" ng-if="showSpinner">
@@ -194,9 +203,11 @@
 <!-- Load Controllers -->
 <script src="controller/homeController.js"></script>
 <script src="controller/suppliersController.js"></script>
+<script src="controller/reportsController.js"></script>
 
 <!-- Load Models -->
 <script src="model/homeFactory.js"></script>
 <script src="model/suppliersFactory.js"></script>
+<script src="model/reportsFactory.js"></script>
 
 </html>

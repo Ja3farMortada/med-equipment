@@ -84,24 +84,25 @@
             <div ng-if="loading" class="d-flex justify-content-center col">
                 <div class="spinner-border text-dark"></div>
             </div>
-            <div class="col-auto mx-auto">
-                <!-- <button ng-if="equipments.length > 0" ng-click="exportExcel()" class="btn btn-outline-success">Export Excel
-                <i class="fas fa-table"></i></button>
-                    -->
-
+            <div class="col-4 text-center">
+                <button ng-if="equipments.length > 0" ng-click="exportExcel()" class="btn btn-success">Export Excel
+                    <i class="fas fa-table"></i></button>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
                 <dir-pagination-controls max-size="5" direction-links="true" boundary-links="false"
                     template-url="templates/dirPagination.tpl.html">
                 </dir-pagination-controls>
             </div>
+            <div class="col-4"></div>
             <!-- <div class="col-3">
-            <div class="input-group" ng-show="equipments.length > 0">
-                <div class="input-group-text">
-                    <i class="fas fa-search"></i>
+                <div class="input-group" ng-show="equipments.length > 0">
+                    <div class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <input ng-change="test()" id="search" type="search" class="form-control form-control-sm"
+                        ng-model="searchVal" placeholder="Search..." spellcheck="false">
                 </div>
-                <input ng-change="test()" id="search" type="search" class="form-control form-control-sm" ng-model="searchVal"
-                    placeholder="Search..." spellcheck="false">
-            </div>
-        </div> -->
+            </div> -->
         </div>
         <table class="table table-striped table-sm table-bordered text-center">
             <caption><b>Total Results:</b>
@@ -145,9 +146,12 @@
                     <td>{{ data.model }}</td>
                     <td>{{ data.serial_no }}</td>
 
-                    <td width="5%" ng-click="openEditEquipmentModal(data)" class="info-hover text-info"><i class="fas fa-edit"></i> Edit</td>
-                    <td width="6%" ng-click="openServiceModal(data)" class="danger-hover text-danger"><i class="fas fa-wrench"></i> Service</td>
-                    <td ng-click="moreInfoModal(data)" class="dark-hover text-dark"><i class="fas fa-info-circle"></i> More Info</td>
+                    <td width="6%" ng-click="openEditEquipmentModal(data)" class="info-hover text-info"><i
+                            class="fas fa-edit"></i> Edit</td>
+                    <td width="7%" ng-click="openServiceModal(data)" class="danger-hover text-danger"><i
+                            class="fas fa-wrench"></i> Service</td>
+                    <td ng-click="moreInfoModal(data)" class="dark-hover text-dark"><i class="fas fa-info-circle"></i>
+                        More Info</td>
                 </tr>
 
                 <tr ng-if="equipments.length === 0">
@@ -215,7 +219,8 @@
             </tr>
 
             <tr>
-                <td colspan="10" ng-if="recentEquipments.length == 0">No recently added equipments in the last 10 days !</td>
+                <td colspan="10" ng-if="recentEquipments.length == 0">No recently added equipments in the last 10 days !
+                </td>
             </tr>
         </tbody>
     </table>
@@ -258,8 +263,8 @@
                         <div class="col mb-2">
                             <label class="form-label">EST Report</label>
                             <select class="form-control" ng-model="modalData.est_report">
-                                <option ng-value="false">No</option>
-                                <option ng-value="true">Yes</option>
+                                <option ng-value="0">No</option>
+                                <option ng-value="1">Yes</option>
                             </select>
                         </div>
 
@@ -289,7 +294,8 @@
                             <label class="form-label">Supplier</label>
                             <!-- <input required type="text" class="form-control" spellcheck="false"
                                 ng-model="modalData.supplier"> -->
-                            <select class="form-control" ng-model="modalData.supplier_ID_FK" ng-options="supplier.supplier_ID as supplier.name for supplier in suppliers"></select>
+                            <select class="form-control" ng-model="modalData.supplier_ID_FK"
+                                ng-options="supplier.supplier_ID as supplier.name for supplier in suppliers"></select>
                         </div>
 
                         <!-- model -->
@@ -320,7 +326,8 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
                         Cancel</button>
-                        <button ng-show="modalTitle == 'Edit Equipment'" ng-click="deleteEquipment()" class="btn btn-danger" type="button"><i class="fas fa-trash-alt"></i> Delete</button>
+                    <button ng-show="modalTitle == 'Edit Equipment'" ng-click="deleteEquipment()" class="btn btn-danger"
+                        type="button"><i class="fas fa-trash-alt"></i> Delete</button>
                     <button class="btn btn-success" type="submit"><i class="fas fa-check"></i>
                         Confirm</button>
                 </div>
@@ -338,14 +345,54 @@
                 <h5 class="modal-title"><i class="fas fa-info-circle fa-lg"></i> {{ moreInfoData.description }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form>
+            <form ng-submit="addExtension()">
                 <div class="modal-body">
                     <label><b>Maker/Origin:</b> {{ moreInfoData.maker }}</label>
                     <br>
                     <label><b>Remarks:</b> {{ moreInfoData.notes || ' --- '}}</label>
-                    <br>
                     <hr>
-                    <!-- add table -->
+                    <h6><i class="fas fa-puzzle-piece"></i> Extensions</h6>
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Serial No.</th>
+                                <th>Notes</th>
+                                <th>Del?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in extensionData">
+                                <td>{{ data.ext_name }}</td>
+                                <td>{{ data.ext_serial_no || ' --- ' }}</td>
+                                <td>{{ data.ext_notes || ' --- ' }}</td>
+                                <td ng-click="deleteExtension($index, data.ext_ID)" class="danger-hover text-danger"><i class="fas fa-trash-alt"></i></td>
+                            </tr>
+                            <tr ng-show="extensionData.length == 0">
+                                <td class="table-active" colspan="4">No Extensions Yet!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <hr>
+                    <h6><i class="fas fa-plus"></i> Add Extension</h6>
+                    <div class="row">
+                        <div class="col-4">
+                            <label>Extension Name</label>
+                            <input spellcheck="false" type="text" class="form-control"
+                                ng-model="newExtensionData.ext_name" required>
+                        </div>
+                        <div class="col-4">
+                            <label>Serial No.</label>
+                            <input spellcheck="false" type="text" class="form-control"
+                                ng-model="newExtensionData.ext_serial_no">
+                        </div>
+                        <div class="col-4">
+                            <label>Notes</label>
+                            <input spellcheck="false" type="text" class="form-control"
+                                ng-model="newExtensionData.ext_notes">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
@@ -363,12 +410,62 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-wrench fa-lg"></i> {{ serviceModalData.description }}</h5>
+                <h5 class="modal-title"><i class="fas fa-wrench fa-lg"></i> Service History</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form>
+            <form ng-submit="submitNewService()">
                 <div class="modal-body">
-                    
+                    <table class="table table-bordered table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Notes</th>
+                                <th>Del?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="data in serviceModalData">
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ data.service_type }}</td>
+                                <td>{{ data.service_description }}</td>
+                                <td>{{ data.service_date }}</td>
+                                <td>{{ data.service_time }}</td>
+                                <td>{{ data.service_notes || ' --- ' }}</td>
+                                <td ng-click="deleteService($index, data.service_ID)" class="danger-hover text-danger"><i class="fas fa-trash-alt"></i></td>
+                            </tr>
+
+                            <tr class="table-active" ng-show="serviceModalData.length == 0">
+                                <td colspan="7">No Services Yet!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- <br> -->
+                    <hr>
+                    <h6><i class="fas fa-plus"></i> Add Maintenance Record</h6>
+                    <div class="row">
+                        <div class="col-3">
+                            <label>Service Type</label>
+                            <select class="form-control" ng-model="newServiceData.service_type">
+                                <option value="ppm">PPM</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div class="form-text"><span class="text-danger">*Notice:</span> Adding PPM record will update PPM schedule automatically.</div>
+                        </div>
+                        <div class="col-3">
+                            <label>Service Description</label>
+                            <input spellcheck="false" type="text" class="form-control"
+                                ng-model="newServiceData.service_description" required>
+                        </div>
+                        <div class="col-6">
+                            <label>Notes</label>
+                            <input spellcheck="false" type="text" class="form-control"
+                                ng-model="newServiceData.service_notes">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"><i class="fas fa-times"></i>
