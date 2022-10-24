@@ -1,12 +1,11 @@
 const e = require("express");
-const server = require("..");
 
 module.exports = (server, db) => {
 
-    server.post('/search', (req, res) => {
+    server.post('/searchSuquim', (req, res) => {
         let data = req.body[0];
         let ppmData = req.body[1];
-        let query = `SELECT e.*, s.name AS supplier FROM equipments e INNER JOIN suppliers s ON supplier_ID_FK = supplier_ID WHERE `;
+        let query = `SELECT e.*, s.name AS supplier FROM suquim_equipments e LEFT JOIN suppliers s ON supplier_ID_FK = supplier_ID WHERE `;
         let values = [];
         let count = 0;
         for (let i = 0; i < data.length; i++) {
@@ -44,8 +43,8 @@ module.exports = (server, db) => {
     });
 
 
-    server.get('/getRecentEquipments', (req, res) => {
-        let query = `SELECT e.*, s.name AS supplier FROM equipments e INNER JOIN suppliers s ON supplier_ID_FK = supplier_ID WHERE DATEDIFF(DATE(now()), date_added) < 10 AND record_status = 1`;
+    server.get('/getRecentEquipmentsSuquim', (req, res) => {
+        let query = `SELECT e.*, s.name AS supplier FROM suquim_equipments e INNER JOIN suppliers s ON supplier_ID_FK = supplier_ID WHERE DATEDIFF(DATE(now()), date_added) < 10 AND record_status = 1`;
         db.query(query, function (error, results) {
             if (error) {
                 res.status(400).send(error);
@@ -56,14 +55,14 @@ module.exports = (server, db) => {
     });
 
     // Add Equipment
-    server.post('/addEquipment', (req, res) => {
+    server.post('/addEquipmentSuquim', (req, res) => {
         let data = req.body;
-        let query = `INSERT INTO equipments SET ?`;
+        let query = `INSERT INTO suquim_equipments SET ?`;
         db.query(query, data, function (error, result) {
             if (error) {
                 res.status(400).send(error);
             } else {
-                db.query(`SELECT * FROM equipments WHERE record_ID = ${result.insertId}`, function (error, result) {
+                db.query(`SELECT * FROM suquim_equipments WHERE record_ID = ${result.insertId}`, function (error, result) {
                     if (error) {
                         res.status(400).send(error);
                     } else {
@@ -75,10 +74,10 @@ module.exports = (server, db) => {
     });
 
     // Edit Equipment
-    server.post('/editEquipment', (req, res) => {
+    server.post('/editEquipmentSuquim', (req, res) => {
         let data = req.body;
         delete data['supplier']
-        let query = `UPDATE equipments SET ? WHERE record_ID = ${data.record_ID}`;
+        let query = `UPDATE suquim_equipments SET ? WHERE record_ID = ${data.record_ID}`;
         db.query(query, data, function (error, result) {
             if (error) {
                 res.status(400).send(error);
@@ -89,9 +88,9 @@ module.exports = (server, db) => {
     });
 
     // Delete Equipment
-    server.post('/deleteEquipment', (req, res) => {
+    server.post('/deleteEquipmentSuquim', (req, res) => {
         let ID = req.body.ID;
-        let query = `DELETE FROM equipments WHERE record_ID = ?`;
+        let query = `DELETE FROM suquim_equipments WHERE record_ID = ?`;
         db.query(query, ID, function (error, result) {
             if (error) {
                 res.status(400).send(error);
@@ -102,15 +101,15 @@ module.exports = (server, db) => {
     });
 
     // get service records
-    server.get('/getService', (req, res) => {
+    server.get('/getServiceSuquim', (req, res) => {
         let ID = req.query.ID;
-        let query = `SELECT * FROM service_history WHERE equipment_ID_FK = ? AND service_status = 1`;
+        let query = `SELECT * FROM suquim_history WHERE equipment_ID_FK = ? AND service_status = 1`;
 
         function doQuery() {
             db.query(query, ID, function (error, results) {
                 if (error) {
                     if (error.code == 'ER_NO_SUCH_TABLE') {
-                        let query2 = 'CREATE TABLE `med-equipments`.`service_history` (`service_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `service_type` VARCHAR(10) NOT NULL , `service_description` VARCHAR(100) NOT NULL , `service_date` DATE NOT NULL , `service_time` TIME NOT NULL , `service_notes` VARCHAR(100) NULL, `service_status` BOOLEAN NOT NULL  DEFAULT 1, PRIMARY KEY (`service_ID`)) ENGINE = InnoDB;';
+                        let query2 = 'CREATE TABLE `med-equipments`.`suquim_history` (`service_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `service_type` VARCHAR(10) NOT NULL , `service_description` VARCHAR(100) NOT NULL , `service_date` DATE NOT NULL , `service_time` TIME NOT NULL , `service_notes` VARCHAR(100) NULL, `service_status` BOOLEAN NOT NULL  DEFAULT 1, PRIMARY KEY (`service_ID`)) ENGINE = InnoDB;';
                         db.query(query2)
                     } else {
                         res.status(400).send(error);
@@ -126,9 +125,9 @@ module.exports = (server, db) => {
 
 
     // add new service
-    server.post('/addNewService', (req, res) => {
+    server.post('/addNewServiceSuquim', (req, res) => {
         let data = req.body.data;
-        let query = `INSERT INTO service_history SET ?`;
+        let query = `INSERT INTO suquim_history SET ?`;
         db.query(query, data, function (error) {
             if (error) {
                 res.status(400).send(error);
@@ -136,7 +135,7 @@ module.exports = (server, db) => {
                 if (data.service_type == 'ppm') {
                     let ID = data.equipment_ID_FK;
                     let date = data.service_date;
-                    let query2 = `UPDATE equipments SET ppm_done = ? WHERE record_ID = ?; UPDATE equipments SET  ppm_schedule = DATE_ADD(ppm_schedule, INTERVAL 1 YEAR) WHERE record_ID = ?`;
+                    let query2 = `UPDATE suquim_equipments SET ppm_done = ? WHERE record_ID = ?; UPDATE equipments SET  ppm_schedule = DATE_ADD(ppm_schedule, INTERVAL 1 YEAR) WHERE record_ID = ?`;
                     db.query(query2, [date, ID, ID], function (error) {
                         if (error) {
                             res.status(400).send(error);
@@ -152,9 +151,9 @@ module.exports = (server, db) => {
     })
 
     // delete service
-    server.post('/deleteService', (req, res) => {
+    server.post('/deleteServiceSuquim', (req, res) => {
         let ID = req.body.ID;
-        let query = `UPDATE service_history SET service_status = 0 WHERE service_ID = ?`;
+        let query = `UPDATE suquim_history SET service_status = 0 WHERE service_ID = ?`;
         db.query(query, ID, function (error) {
             if (error) {
                 res.status(400).send(error);
@@ -165,15 +164,15 @@ module.exports = (server, db) => {
     })
 
     // getExtensions
-    server.get('/getExtensions', (req, res) => {
+    server.get('/getExtensionsSuquim', (req, res) => {
         let ID = req.query.ID;
-        let query = `SELECT * FROM eq_extensions WHERE equipment_ID_FK = ? AND ext_status = 1`;
+        let query = `SELECT * FROM suquim_extensions WHERE equipment_ID_FK = ? AND ext_status = 1`;
 
         function doQuery() {
             db.query(query, ID, function (error, results) {
                 if (error) {
                     if (error.code == 'ER_NO_SUCH_TABLE') {
-                        let query2 = 'CREATE TABLE `med-equipments`.`eq_extensions` (`ext_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `ext_name` VARCHAR(50) NOT NULL , `ext_serial_no` VARCHAR(50) NULL ,  `ext_notes` VARCHAR(100) NULL, `ext_status` BOOLEAN NOT NULL  DEFAULT 1, PRIMARY KEY (`ext_ID`)) ENGINE = InnoDB;';
+                        let query2 = 'CREATE TABLE `med-equipments`.`suquim_extensions` (`ext_ID` INT NOT NULL AUTO_INCREMENT , `equipment_ID_FK` INT NOT NULL , `ext_name` VARCHAR(50) NOT NULL , `ext_serial_no` VARCHAR(50) NULL ,  `ext_notes` VARCHAR(100) NULL, `ext_status` BOOLEAN NOT NULL  DEFAULT 1, PRIMARY KEY (`ext_ID`)) ENGINE = InnoDB;';
                         db.query(query2)
                     } else {
                         res.status(400).send(error);
@@ -188,9 +187,9 @@ module.exports = (server, db) => {
     });
 
     // addExtension
-    server.post('/addExtension', (req, res) => {
+    server.post('/addExtensionSuquim', (req, res) => {
         let data = req.body.data;
-        let query = `INSERT INTO eq_extensions SET ?`;
+        let query = `INSERT INTO suquim_extensions SET ?`;
         db.query(query, data, function (error) {
             if (error) {
                 res.status(400).send(error);
@@ -201,9 +200,9 @@ module.exports = (server, db) => {
     })
 
     // deleteExtension
-    server.post('/deleteExtension', (req, res) => {
+    server.post('/deleteExtensionSuquim', (req, res) => {
         let ID = req.body.ID;
-        let query = `UPDATE eq_extensions SET ext_status = 0 WHERE ext_ID = ?`;
+        let query = `UPDATE suquim_extensions SET ext_status = 0 WHERE ext_ID = ?`;
         db.query(query, ID, function (error) {
             if (error) {
                 res.status(400).send(error);

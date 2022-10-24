@@ -9,6 +9,16 @@ app.config(function ($routeProvider) {
             controller: 'homeController'
         })
 
+        .when('/village', {
+            templateUrl: 'view/village.html',
+            controller: 'villageController'
+        })
+
+        .when('/suquim', {
+            templateUrl: 'view/suquim.html',
+            controller: 'suquimController'
+        })
+
         .when('/suppliers', {
             templateUrl: 'view/suppliers.html',
             controller: 'suppliersController'

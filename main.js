@@ -75,10 +75,10 @@ ipcMain.on('backupDB', () => {
         if (data.canceled == false) {
             mysqldump({
                 connection: {
-                    host: keys.host,
-                    user: keys.username,
+                    host: 'localhost',
+                    user: 'root',
                     password: keys.password,
-                    database: keys.database
+                    database: 'med-equipments'
                 },
                 dumpToFile: `${data.filePath}`
             }).then(function () {
